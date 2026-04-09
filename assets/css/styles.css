@@ -816,22 +816,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .features-highlight-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .feature-item {
   border-radius: var(--radius-md);
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 0 0 auto;
 }
 
 .feature-gif {
-  width: 100%;
-  height: auto;
   display: block;
   border-radius: var(--radius-md);
 }
@@ -2043,7 +2040,6 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .features-highlight-grid {
-    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
   }
 
@@ -2121,7 +2117,12 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .features-highlight-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-item {
+    flex: 0 0 100%;
   }
 
   .recipe-card-featured {
