@@ -649,24 +649,6 @@
   });
 
   // ========================================
-  // VIDEO PLAYER
-  // ========================================
-  const playFeatureVideo = document.getElementById('play-feature-video');
-  if (playFeatureVideo) {
-    playFeatureVideo.addEventListener('click', () => {
-      const video = playFeatureVideo.closest('.feature-video-wrap').querySelector('video');
-      if (video) {
-        if (video.paused) {
-          video.play();
-          playFeatureVideo.innerHTML = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-        } else {
-          video.pause();
-          playFeatureVideo.innerHTML = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-        }
-      }
-    });
-  }
-
   // ========================================
   // INIT
   // ========================================
@@ -675,27 +657,6 @@
     loadWishlist();
     handleNavbarScroll();
     updateCarousel();
-    
-    // Feature video play button
-    const featureVideo = document.getElementById('feature-video');
-    const featureOverlay = document.getElementById('feature-overlay');
-    const playFeatureBtn = document.getElementById('play-feature-video');
-    if (playFeatureBtn && featureVideo && featureOverlay) {
-      playFeatureBtn.addEventListener('click', () => {
-        featureVideo.play();
-        featureOverlay.style.display = 'none';
-      });
-      featureVideo.addEventListener('click', () => {
-        if (featureVideo.paused) {
-          featureVideo.play();
-        } else {
-          featureVideo.pause();
-        }
-      });
-      featureVideo.addEventListener('ended', () => {
-        featureOverlay.style.display = 'flex';
-      });
-    }
 
     // Close modals on escape
     document.addEventListener('keydown', (e) => {
