@@ -818,13 +818,12 @@ h1, h2, h3, h4, h5, h6 {
 .features-highlight-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  gap: 24px;
 }
 
 .feature-item {
   border-radius: var(--radius-md);
   overflow: hidden;
-  aspect-ratio: 1 / 1;
 }
 
 .feature-gif {
@@ -2113,7 +2112,7 @@ h1, h2, h3, h4, h5, h6 {
 
   .features-highlight-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 16px;
   }
 
   .recipe-card-featured {
