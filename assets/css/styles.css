@@ -742,27 +742,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .banner-divider-tag {
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 3px;
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 700;
+  letter-spacing: 4px;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .banner-divider-title {
-  font-size: clamp(36px, 5vw, 64px);
+  font-size: clamp(28px, 4vw, 52px);
   font-weight: 700;
   color: white;
   line-height: 1.1;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 .banner-divider-btn {
-  padding: 14px 40px;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 1px;
+  padding: 18px 60px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
   text-transform: uppercase;
   background-color: var(--color-primary);
   color: white;
