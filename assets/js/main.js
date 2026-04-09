@@ -685,6 +685,14 @@
         featureVideo.play();
         featureOverlay.style.display = 'none';
       });
+      featureVideo.addEventListener('click', () => {
+        if (featureVideo.paused) {
+          featureVideo.play();
+          featureOverlay.style.display = 'none';
+        } else {
+          featureVideo.pause();
+        }
+      });
       featureVideo.addEventListener('ended', () => {
         featureOverlay.style.display = 'flex';
       });
