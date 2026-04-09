@@ -57,7 +57,7 @@ ounin-clone/
 1. **Clone the repository**
    ```bash
    git clone https://github.com/yourusername/ounin-clone.git
-   cd ounin-clone
+   cd ouning-clone
    ```
 
 2. **Open in browser**

@@ -16,8 +16,8 @@
   --color-border: #E8E4E0;
   --color-success: #4CAF50;
   --color-error: #E53935;
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Didot', 'Bodoni MT', 'Book Antiqua', 'Palatino Linotype', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
@@ -176,7 +176,7 @@ h1, h2, h3, h4, h5, h6 {
 .navbar-brand {
   font-family: var(--font-serif);
   font-size: 28px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 4px;
   color: var(--color-primary);
 }
