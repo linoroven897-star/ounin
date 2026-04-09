@@ -676,6 +676,20 @@
     handleNavbarScroll();
     updateCarousel();
     
+    // Feature video play button
+    const featureVideo = document.getElementById('feature-video');
+    const featureOverlay = document.getElementById('feature-overlay');
+    const playFeatureBtn = document.getElementById('play-feature-video');
+    if (playFeatureBtn && featureVideo && featureOverlay) {
+      playFeatureBtn.addEventListener('click', () => {
+        featureVideo.play();
+        featureOverlay.style.display = 'none';
+      });
+      featureVideo.addEventListener('ended', () => {
+        featureOverlay.style.display = 'flex';
+      });
+    }
+
     // Close modals on escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
