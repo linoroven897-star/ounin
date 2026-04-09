@@ -818,7 +818,7 @@ h1, h2, h3, h4, h5, h6 {
 .features-highlight-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 16px;
 }
 
 .feature-item {
@@ -2112,7 +2112,7 @@ h1, h2, h3, h4, h5, h6 {
 
   .features-highlight-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 12px;
   }
 
   .recipe-card-featured {
