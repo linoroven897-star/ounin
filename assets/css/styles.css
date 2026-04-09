@@ -811,19 +811,30 @@ h1, h2, h3, h4, h5, h6 {
    FEATURES HIGHLIGHT (3 GIF)
    ======================================== */
 .features-highlight {
-  padding: 60px 0;
+  padding: 80px 0;
   background-color: var(--color-background);
+}
+
+.features-highlight-title {
+  font-family: var(--font-serif);
+  font-size: 40px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text);
+  margin-bottom: 48px;
+  letter-spacing: 2px;
 }
 
 .features-highlight-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 40px;
 }
 
 .feature-item {
   border-radius: var(--radius-md);
   overflow: hidden;
+  aspect-ratio: 1 / 1;
 }
 
 .feature-gif {
@@ -2031,7 +2042,12 @@ h1, h2, h3, h4, h5, h6 {
   .usp-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
+  .features-highlight-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
   .recipes-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -2104,7 +2120,17 @@ h1, h2, h3, h4, h5, h6 {
   .values-grid {
     grid-template-columns: 1fr;
   }
-  
+
+  .features-highlight-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .features-highlight-title {
+    font-size: 28px;
+    margin-bottom: 32px;
+  }
+
   .recipe-card-featured {
     grid-column: span 1;
   }
