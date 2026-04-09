@@ -808,6 +808,32 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ========================================
+   FEATURES HIGHLIGHT (3 GIF)
+   ======================================== */
+.features-highlight {
+  padding: 60px 0;
+  background-color: var(--color-background);
+}
+
+.features-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.feature-item {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.feature-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ========================================
    BRAND STORY
    ======================================== */
 .brand-story {
