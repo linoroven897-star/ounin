@@ -830,6 +830,10 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
 }
 
+video#feature-video::-webkit-media-controls {
+  display: none !important;
+}
+
 .feature-gif {
   width: 100%;
   height: 100%;
