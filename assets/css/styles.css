@@ -824,6 +824,16 @@ h1, h2, h3, h4, h5, h6 {
 .feature-item {
   border-radius: var(--radius-md);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-gif {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius-md);
 }
 
 .feature-gif {
@@ -2112,7 +2122,6 @@ h1, h2, h3, h4, h5, h6 {
 
   .features-highlight-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
   }
 
   .recipe-card-featured {
