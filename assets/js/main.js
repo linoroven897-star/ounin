@@ -688,7 +688,6 @@
       featureVideo.addEventListener('click', () => {
         if (featureVideo.paused) {
           featureVideo.play();
-          featureOverlay.style.display = 'none';
         } else {
           featureVideo.pause();
         }
