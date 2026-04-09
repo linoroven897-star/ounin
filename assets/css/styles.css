@@ -815,16 +815,6 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--color-background);
 }
 
-.features-highlight-title {
-  font-family: var(--font-serif);
-  font-size: 40px;
-  font-weight: 700;
-  text-align: center;
-  color: var(--color-text);
-  margin-bottom: 48px;
-  letter-spacing: 2px;
-}
-
 .features-highlight-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -2124,11 +2114,6 @@ h1, h2, h3, h4, h5, h6 {
   .features-highlight-grid {
     grid-template-columns: 1fr;
     gap: 24px;
-  }
-
-  .features-highlight-title {
-    font-size: 28px;
-    margin-bottom: 32px;
   }
 
   .recipe-card-featured {
