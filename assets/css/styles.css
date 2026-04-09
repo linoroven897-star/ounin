@@ -927,27 +927,24 @@ h1, h2, h3, h4, h5, h6 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 16px;
-  height: 400px;
+  gap: 12px;
+  height: 420px;
 }
 
-.story-img-tl {
-  grid-column: 1;
-  grid-row: 1;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: var(--radius-md);
-}
-
+.story-img-tl,
+.story-img-tr,
+.story-img-bl,
 .story-img-br {
-  grid-column: 2;
-  grid-row: 2;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: var(--radius-md);
 }
+
+.story-img-tl { grid-column: 1; grid-row: 1; }
+.story-img-tr { grid-column: 2; grid-row: 1; }
+.story-img-bl { grid-column: 1; grid-row: 2; }
+.story-img-br { grid-column: 2; grid-row: 2; }
 
 .story-tag {
   font-size: 12px;
