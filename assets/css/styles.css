@@ -664,6 +664,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .product-info {
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 180px;
 }
 
 .product-name {
