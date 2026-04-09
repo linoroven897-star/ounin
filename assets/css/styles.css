@@ -714,6 +714,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ========================================
+   BANNER DIVIDER
+   ======================================== */
+.banner-divider {
+  width: 100%;
+  line-height: 0;
+}
+
+.banner-divider-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ========================================
    FEATURES HIGHLIGHT (3 GIF)
    ======================================== */
 .features-highlight {
