@@ -819,18 +819,15 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   gap: 16px;
   justify-content: center;
-  flex-wrap: wrap;
+  align-items: center;
 }
 
 .feature-item {
-  border-radius: var(--radius-md);
-  overflow: hidden;
   flex: 0 0 auto;
 }
 
 .feature-gif {
   display: block;
-  border-radius: var(--radius-md);
 }
 
 .feature-gif {
@@ -2117,12 +2114,8 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .features-highlight-grid {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .feature-item {
-    flex: 0 0 100%;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   .recipe-card-featured {
