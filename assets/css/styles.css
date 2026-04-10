@@ -825,17 +825,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .prec-track {
-  display: flex;
-  width: 400%;
+  position: relative;
+  width: 100%;
   height: 100%;
-  transition: transform 0.4s ease-in-out;
 }
 
 .prec-slide {
-  flex: 0 0 25%;
-  width: 25%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.prec-slide.active {
+  opacity: 1;
 }
 
 .prec-prev,

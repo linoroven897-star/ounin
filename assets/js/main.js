@@ -661,8 +661,10 @@
   let precisionIndex = 0;
 
   function updatePrecisionCarousel() {
-    if (!precisionTrack || !precisionSlides.length) return;
-    precisionTrack.style.transform = `translateX(-${precisionIndex * 100}%)`;
+    if (!precisionSlides.length) return;
+    precisionSlides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === precisionIndex);
+    });
     precisionDots.forEach((dot, i) => {
       dot.classList.toggle('active', i === precisionIndex);
     });
