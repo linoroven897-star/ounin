@@ -812,8 +812,8 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-sm);
 }
 
-/* Carousel */
-.carousel {
+/* Precision Technology Carousel */
+.prec-carousel {
   position: relative;
   width: 100%;
   height: 100%;
@@ -822,21 +822,22 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-sm);
 }
 
-.carousel-track {
+.prec-track {
   display: flex;
   width: 400%;
   height: 100%;
   transition: transform 0.4s ease-in-out;
 }
 
-.carousel-slide {
+.prec-slide {
   flex: 0 0 25%;
   width: 25%;
   height: 100%;
   object-fit: cover;
 }
 
-.carousel-btn {
+.prec-prev,
+.prec-next {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -853,20 +854,22 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 2;
 }
 
-.carousel-btn:hover {
+.prec-prev { left: 12px; }
+.prec-next { right: 12px; }
+
+.prec-prev:hover,
+.prec-next:hover {
   background: rgba(255,255,255,1);
 }
 
-.carousel-prev { left: 12px; }
-.carousel-next { right: 12px; }
-
-.carousel-btn svg {
+.prec-prev svg,
+.prec-next svg {
   width: 20px;
   height: 20px;
   color: #333;
 }
 
-.carousel-dots {
+.prec-dots {
   position: absolute;
   bottom: 16px;
   left: 50%;
@@ -876,7 +879,7 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 2;
 }
 
-.carousel-dot {
+.prec-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -885,7 +888,7 @@ h1, h2, h3, h4, h5, h6 {
   transition: background 0.3s;
 }
 
-.carousel-dot.active {
+.prec-dot.active {
   background: #fff;
 }
 

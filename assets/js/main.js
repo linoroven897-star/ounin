@@ -653,11 +653,11 @@
   // PRECISION TECHNOLOGY CAROUSEL
   // ========================================
   const precisionCarousel = document.getElementById('precisionCarousel');
-  const precisionTrack = precisionCarousel?.querySelector('.carousel-track');
-  const precisionSlides = precisionCarousel?.querySelectorAll('.carousel-slide');
-  const precisionPrev = precisionCarousel?.querySelector('.carousel-prev');
-  const precisionNext = precisionCarousel?.querySelector('.carousel-next');
-  const precisionDots = precisionCarousel?.querySelectorAll('.carousel-dot');
+  const precisionTrack = precisionCarousel?.querySelector('.prec-track');
+  const precisionSlides = precisionCarousel?.querySelectorAll('.prec-slide');
+  const precisionPrev = precisionCarousel?.querySelector('.prec-prev');
+  const precisionNext = precisionCarousel?.querySelector('.prec-next');
+  const precisionDots = precisionCarousel?.querySelectorAll('.prec-dot');
   let precisionIndex = 0;
 
   function updatePrecisionCarousel() {
