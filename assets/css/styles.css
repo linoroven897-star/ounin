@@ -373,11 +373,29 @@ h1, h2, h3, h4, h5, h6 {
   object-fit: cover;
 }
 
+.hero-video-mobile {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .hero-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+@media (max-width: 768px) {
+  .hero-video-desktop {
+    display: none;
+  }
+
+  .hero-video-mobile {
+    display: block;
+  }
 }
 
 .hero-overlay {
