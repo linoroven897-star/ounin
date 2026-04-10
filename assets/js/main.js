@@ -650,6 +650,52 @@
 
   // ========================================
   // ========================================
+  // PRECISION TECHNOLOGY CAROUSEL
+  // ========================================
+  const precisionCarousel = document.getElementById('precisionCarousel');
+  const precisionTrack = precisionCarousel?.querySelector('.carousel-track');
+  const precisionSlides = precisionCarousel?.querySelectorAll('.carousel-slide');
+  const precisionPrev = precisionCarousel?.querySelector('.carousel-prev');
+  const precisionNext = precisionCarousel?.querySelector('.carousel-next');
+  const precisionDots = precisionCarousel?.querySelectorAll('.carousel-dot');
+  let precisionIndex = 0;
+
+  function updatePrecisionCarousel() {
+    if (!precisionTrack || !precisionSlides.length) return;
+    precisionTrack.style.transform = `translateX(-${precisionIndex * 100}%)`;
+    precisionDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === precisionIndex);
+    });
+  }
+
+  function movePrecisionCarousel(dir) {
+    const total = precisionSlides.length;
+    if (dir === 'next') {
+      precisionIndex = (precisionIndex + 1) % total;
+    } else {
+      precisionIndex = (precisionIndex - 1 + total) % total;
+    }
+    updatePrecisionCarousel();
+  }
+
+  if (precisionPrev) {
+    precisionPrev.addEventListener('click', () => movePrecisionCarousel('prev'));
+  }
+
+  if (precisionNext) {
+    precisionNext.addEventListener('click', () => movePrecisionCarousel('next'));
+  }
+
+  if (precisionDots) {
+    precisionDots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        precisionIndex = parseInt(dot.dataset.index);
+        updatePrecisionCarousel();
+      });
+    });
+  }
+
+  // ========================================
   // INIT
   // ========================================
   function init() {
