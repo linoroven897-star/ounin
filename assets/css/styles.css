@@ -1031,6 +1031,13 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
 }
 
+.story-single-img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
 .story-img-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
