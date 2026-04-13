@@ -2936,3 +2936,284 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-secondary);
   line-height: 1.4;
 }
+
+/* ========================================
+   FLOATING POPUP
+   ======================================== */
+
+.floating-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.floating-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.floating-btn:hover {
+  transform: scale(1.08);
+}
+
+.floating-btn-cookie {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.floating-btn-promo {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.floating-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.floating-popup {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  z-index: 9999;
+  width: 380px;
+  max-width: calc(100vw - 48px);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transform: translateY(20px);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform var(--transition-normal), opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.floating-popup.active {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.floating-popup-header {
+  padding: 20px 24px;
+  background-color: var(--color-secondary);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.floating-popup-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.floating-popup-tabs {
+  display: flex;
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.floating-popup-tab {
+  flex: 1;
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-light);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+  border-bottom: 2px solid transparent;
+}
+
+.floating-popup-tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  background-color: var(--color-surface);
+}
+
+.floating-popup-tab:hover:not(.active) {
+  color: var(--color-secondary);
+}
+
+.floating-popup-content {
+  padding: 24px;
+}
+
+.floating-popup-panel {
+  display: none;
+}
+
+.floating-popup-panel.active {
+  display: block;
+}
+
+.floating-popup-close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+}
+
+.floating-popup-close:hover {
+  opacity: 1;
+}
+
+/* Cookie Consent */
+.cookie-icon {
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: white;
+}
+
+.cookie-text {
+  font-size: 14px;
+  color: var(--color-text-light);
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.cookie-text a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.cookie-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cookie-btn {
+  padding: 14px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  border: none;
+  text-align: center;
+}
+
+.cookie-btn:hover {
+  transform: translateY(-1px);
+}
+
+.cookie-btn-accept {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.cookie-btn-accept:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.cookie-btn-preferences {
+  background-color: var(--color-background);
+  color: var(--color-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.cookie-btn-preferences:hover {
+  background-color: var(--color-border);
+}
+
+/* Promotion Panel */
+.promo-icon {
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: white;
+}
+
+.promo-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-secondary);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.promo-desc {
+  font-size: 14px;
+  color: var(--color-text-light);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.promo-highlight {
+  background-color: var(--color-background);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.promo-highlight-text {
+  font-size: 13px;
+  color: var(--color-text-light);
+  margin-bottom: 4px;
+}
+
+.promo-highlight-code {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 2px;
+}
+
+.promo-countdown {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.promo-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.promo-btn:hover {
+  background-color: var(--color-primary-dark);
+}
