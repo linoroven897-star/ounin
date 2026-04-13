@@ -2560,3 +2560,133 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-text-light);
   margin-bottom: 24px;
 }
+
+/* ========================================
+   BLOG PAGE
+   ======================================== */
+
+.blog-section {
+  padding: 60px 0;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.blog-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-card-image {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.blog-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.blog-card:hover .blog-card-image img {
+  transform: scale(1.03);
+}
+
+.blog-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.blog-card-category {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 12px;
+}
+
+.blog-card-title {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-secondary);
+  margin-bottom: 12px;
+}
+
+.blog-card-excerpt {
+  font-size: 14px;
+  color: var(--color-text-light);
+  line-height: 1.7;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.blog-card-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
+
+.blog-card-link:hover {
+  text-decoration: underline;
+}
+
+/* ========================================
+   NEWSLETTER SECTION
+   ======================================== */
+
+.newsletter-section {
+  background-color: var(--color-secondary);
+  padding: 80px 0;
+}
+
+.newsletter-content {
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.newsletter-content h2 {
+  font-size: 28px;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.newsletter-content p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 24px;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 12px;
+}
+
+.newsletter-input {
+  flex: 1;
+  padding: 14px 18px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.newsletter-input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.newsletter-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
