@@ -1079,10 +1079,10 @@
       
       // Show if never shown or shown more than 7 days ago
       if (!lastShown || (Date.now() - parseInt(lastShown)) > sevenDays) {
-        // Delay showing popup by 2 seconds
+        // Delay showing popup by 5 seconds
         setTimeout(() => {
           openRegPopup();
-        }, 2000);
+        }, 5000);
       }
     });
 
