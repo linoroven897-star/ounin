@@ -1082,46 +1082,73 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/auth.js"></script>
   <script>
-    // Account data (simulated)
+    // Account data - load from localStorage or use empty defaults
     let accountData = {
-      name: 'John Smith',
-      email: 'john@example.com',
-      points: 2450,
-      lifetimePoints: 3200,
-      tier: 'gold',
-      orders: [
-        {
-          id: 'OUN-2026-1847',
-          date: '2026-04-08',
-          status: 'delivered',
-          items: [
-            { name: 'Ounin Pro Embedded', qty: 1, price: 1299, image: 'assets/images/product-1a.jpg' }
-          ],
-          total: 1299
-        },
-        {
-          id: 'OUN-2026-1623',
-          date: '2026-03-22',
-          status: 'delivered',
-          items: [
-            { name: 'Premium Accessory Kit', qty: 1, price: 149, image: 'assets/images/product-5a.jpg' }
-          ],
-          total: 149
-        }
-      ],
-      wishlist: [
-        { name: 'Ounin Compact', price: 699, image: 'assets/images/product-2a.jpg', url: 'products.html' },
-        { name: 'Ounin Mini', price: 399, image: 'assets/images/product-3a.jpg', url: 'products.html' },
-        { name: 'Ounin Elite Bundle', price: 1599, image: 'assets/images/product-4a.jpg', url: 'products.html' }
-      ],
-      pointsHistory: [
-        { type: 'earned', amount: 1299, title: 'Purchase: Ounin Pro Embedded', date: '2026-04-08' },
-        { type: 'earned', amount: 149, title: 'Purchase: Premium Accessory Kit', date: '2026-03-22' },
-        { type: 'earned', amount: 500, title: 'Birthday Bonus', date: '2026-02-14' },
-        { type: 'earned', amount: 200, title: 'Friend Referral', date: '2026-01-15' },
-        { type: 'redeemed', amount: -100, title: 'Redeemed for $10 discount', date: '2026-01-10' }
-      ]
+      name: '',
+      email: '',
+      points: 0,
+      lifetimePoints: 0,
+      tier: 'bronze',
+      orders: [],
+      wishlist: [],
+      pointsHistory: []
     };
+
+    // Load user data on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = getCurrentUser();
+      
+      if (!user) {
+        // User not logged in - show login modal
+        setTimeout(() => openAuthModal(false), 100);
+      } else {
+        // User is logged in - load real data
+        accountData = {
+          name: user.name || '',
+          email: user.email || '',
+          points: user.points || 0,
+          lifetimePoints: user.lifetimePoints || 0,
+          tier: user.tier || 'bronze',
+          orders: user.orders || [],
+          wishlist: user.wishlist || [],
+          pointsHistory: user.pointsHistory || []
+        };
+        
+        // Update header elements
+        const userNameEl = document.getElementById('user-name');
+        const userEmailEl = document.getElementById('user-email');
+        const membershipTierEl = document.getElementById('membership-tier');
+        const membershipBadge = document.getElementById('membership-badge');
+        const userAvatar = document.getElementById('user-avatar');
+        
+        if (userNameEl) userNameEl.textContent = accountData.name;
+        if (userEmailEl) userEmailEl.textContent = accountData.email;
+        if (userAvatar) userAvatar.textContent = accountData.name.charAt(0).toUpperCase();
+        
+        // Update tier badge
+        const tierNames = { bronze: 'Bronze Member', silver: 'Silver Member', gold: 'Gold Member', platinum: 'Platinum Member' };
+        if (membershipTierEl) membershipTierEl.textContent = tierNames[accountData.tier] || 'Bronze Member';
+        if (membershipBadge) {
+          membershipBadge.className = 'membership-badge tier-' + accountData.tier;
+        }
+        
+        // Update profile form
+        const profileEmail = document.getElementById('profile-email');
+        if (profileEmail) profileEmail.value = accountData.email;
+        
+        // Update points display
+        const pointsBalance = document.getElementById('points-balance');
+        const pointsEarned = document.getElementById('points-earned');
+        if (pointsBalance) pointsBalance.textContent = accountData.points.toLocaleString();
+        if (pointsEarned) pointsEarned.textContent = accountData.lifetimePoints.toLocaleString();
+        
+        // Render user data
+        if (typeof renderOrders === 'function') renderOrders();
+        if (typeof renderWishlist === 'function') renderWishlist();
+        if (typeof renderPointsHistory === 'function') renderPointsHistory();
+        if (typeof updateTierProgress === 'function') updateTierProgress();
+      }
+    });
 
     // Tab functionality
     const tabs = document.querySelectorAll('.account-tab');
@@ -1282,12 +1309,32 @@
     renderWishlist();
     renderPointsHistory();
 
-    // Save profile
+    // Save profile - saves to localStorage
     document.getElementById('save-profile').addEventListener('click', () => {
-      accountData.name = document.getElementById('profile-firstname').value + ' ' + document.getElementById('profile-lastname').value;
-      accountData.email = document.getElementById('profile-email').value;
-      document.getElementById('user-name').textContent = accountData.name;
-      document.getElementById('user-email').textContent = accountData.email;
+      const user = getCurrentUser();
+      if (!user) return;
+      
+      const newName = document.getElementById('profile-firstname').value + ' ' + document.getElementById('profile-lastname').value;
+      const newEmail = document.getElementById('profile-email').value;
+      
+      // Update current user
+      user.name = newName;
+      user.email = newEmail;
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      
+      // Update in users array
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userIndex = users.findIndex(u => u.id === user.id);
+      if (userIndex !== -1) {
+        users[userIndex] = user;
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+      
+      // Update UI
+      document.getElementById('user-name').textContent = newName;
+      document.getElementById('user-email').textContent = newEmail;
+      document.getElementById('user-avatar').textContent = newName.charAt(0).toUpperCase();
+      
       showToast('Profile saved!');
     });
   </script>
@@ -1315,8 +1362,8 @@
     ac&&ac.addEventListener('click',()=>am.classList.remove('active'));
     document.getElementById('show-register')&&document.getElementById('show-register').addEventListener('click',e=>{e.preventDefault();oam(!0)});
     document.getElementById('show-login')&&document.getElementById('show-login').addEventListener('click',e=>{e.preventDefault();oam(!1)});
-    document.getElementById('login-btn')&&document.getElementById('login-btn').addEventListener('click',()=>{const e=document.getElementById('login-email').value,p=document.getElementById('login-password').value,err=document.getElementById('login-error'),suc=document.getElementById('login-success');err&&err.classList.remove('show');const r=login(e,p);if(r.success){suc&&(suc.textContent='Login successful!',suc.classList.add('show'));setTimeout(()=>{am.classList.remove('active');updateAuthUI();showToast('Welcome back, '+r.user.name+'!')},500)}else{err&&(err.textContent=r.message,err.classList.add('show'))}});
-    document.getElementById('register-btn')&&document.getElementById('register-btn').addEventListener('click',()=>{const n=document.getElementById('register-name').value,e=document.getElementById('register-email').value,p=document.getElementById('register-password').value,c=document.getElementById('register-confirm').value,err=document.getElementById('register-error');err&&err.classList.remove('show');if(!n||!e||!p){err&&(err.textContent='Please fill in all fields',err.classList.add('show'));return}if(p!==c){err&&(err.textContent='Passwords do not match',err.classList.add('show'));return}const r=register(n,e,p);if(r.success){am.classList.remove('active');updateAuthUI();showToast('Welcome to Ounin! You got 100 welcome points!')}else{err&&(err.textContent=r.message,err.classList.add('show'))}});
+    document.getElementById('login-btn')&&document.getElementById('login-btn').addEventListener('click',()=>{const e=document.getElementById('login-email').value,p=document.getElementById('login-password').value,err=document.getElementById('login-error'),suc=document.getElementById('login-success');err&&err.classList.remove('show');const r=login(e,p);if(r.success){suc&&(suc.textContent='Login successful!',suc.classList.add('show'));setTimeout(()=>{location.reload()},800)}else{err&&(err.textContent=r.message,err.classList.add('show'))}});
+    document.getElementById('register-btn')&&document.getElementById('register-btn').addEventListener('click',()=>{const n=document.getElementById('register-name').value,e=document.getElementById('register-email').value,p=document.getElementById('register-password').value,c=document.getElementById('register-confirm').value,err=document.getElementById('register-error');err&&err.classList.remove('show');if(!n||!e||!p){err&&(err.textContent='Please fill in all fields',err.classList.add('show'));return}if(p!==c){err&&(err.textContent='Passwords do not match',err.classList.add('show'));return}const r=register(n,e,p);if(r.success){setTimeout(()=>{location.reload()},800)}else{err&&(err.textContent=r.message,err.classList.add('show'))}});
     const ab=document.querySelector('a[aria-label="Account"]');ab&&ab.addEventListener('click',e=>{if(!getCurrentUser()){e.preventDefault();oam(!1)}});
   </script>
 </body>
