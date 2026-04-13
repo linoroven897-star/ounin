@@ -663,6 +663,71 @@
     </div>
   </div>
 
+  <!-- AUTH MODAL -->
+  <div class="auth-modal" id="auth-modal">
+    <div class="auth-modal-overlay" id="auth-overlay"></div>
+    <div class="auth-modal-content">
+      <button class="auth-modal-close" id="auth-close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Login Form -->
+      <div class="auth-form" id="login-form">
+        <div class="auth-header">
+          <h2 class="auth-title">Welcome Back</h2>
+          <p class="auth-subtitle">Sign in to your Ounin account</p>
+        </div>
+        <div class="auth-fields">
+          <div class="auth-error" id="login-error"></div>
+          <div class="auth-success" id="login-success"></div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="login-email" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" id="login-password" placeholder="Enter your password">
+          </div>
+          <button class="auth-submit-btn" id="login-btn">Sign In</button>
+          <p class="auth-switch">
+            Don't have an account? <a href="#" id="show-register">Create one</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Register Form -->
+      <div class="auth-form" id="register-form" style="display: none;">
+        <div class="auth-header">
+          <h2 class="auth-title">Create Account</h2>
+          <p class="auth-subtitle">Join Ounin and get 100 welcome points</p>
+        </div>
+        <div class="auth-fields">
+          <div class="auth-error" id="register-error"></div>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" id="register-name" placeholder="John Smith">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="register-email" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" id="register-password" placeholder="Create a password">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" class="form-input" id="register-confirm" placeholder="Confirm your password">
+          </div>
+          <button class="auth-submit-btn" id="register-btn">Create Account</button>
+          <p class="auth-switch">
+            Already have an account? <a href="#" id="show-login">Sign in</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST NOTIFICATION -->
   <div class="toast" id="toast">
     <div class="toast-content">
@@ -722,6 +787,132 @@
   </div>
 
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    // Auth Modal Logic
+    const authModal = document.getElementById('auth-modal');
+    const authOverlay = document.getElementById('auth-overlay');
+    const authClose = document.getElementById('auth-close');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const showRegister = document.getElementById('show-register');
+    const showLogin = document.getElementById('show-login');
+    const loginBtn = document.getElementById('login-btn');
+    const registerBtn = document.getElementById('register-btn');
+
+    function openAuthModal(isRegister = false) {
+      authModal.classList.add('active');
+      if (isRegister) {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+      } else {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+      }
+      clearAuthForms();
+    }
+
+    function closeAuthModal() {
+      authModal.classList.remove('active');
+    }
+
+    function clearAuthForms() {
+      document.querySelectorAll('.auth-fields input').forEach(input => input.value = '');
+      document.querySelectorAll('.auth-error, .auth-success').forEach(el => el.classList.remove('show'));
+    }
+
+    if (authOverlay) authOverlay.addEventListener('click', closeAuthModal);
+    if (authClose) authClose.addEventListener('click', closeAuthModal);
+    if (showRegister) showRegister.addEventListener('click', (e) => { e.preventDefault(); openAuthModal(true); });
+    if (showLogin) showLogin.addEventListener('click', (e) => { e.preventDefault(); openAuthModal(false); });
+
+    // Login
+    if (loginBtn) {
+      loginBtn.addEventListener('click', () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const errorEl = document.querySelector('#login-form .auth-error');
+        const successEl = document.querySelector('#login-form .auth-success');
+        
+        if (errorEl) errorEl.classList.remove('show');
+        if (successEl) successEl.classList.remove('show');
+        
+        const result = login(email, password);
+        if (result.success) {
+          if (successEl) {
+            successEl.textContent = 'Login successful! Redirecting...';
+            successEl.classList.add('show');
+          }
+          setTimeout(() => {
+            closeAuthModal();
+            updateAuthUI();
+            showToast('Welcome back, ' + result.user.name + '!');
+            if (window.location.pathname.includes('account.html')) {
+              location.reload();
+            }
+          }, 500);
+        } else {
+          if (errorEl) {
+            errorEl.textContent = result.message;
+            errorEl.classList.add('show');
+          }
+        }
+      });
+    }
+
+    // Register
+    if (registerBtn) {
+      registerBtn.addEventListener('click', () => {
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const confirm = document.getElementById('register-confirm').value;
+        const errorEl = document.querySelector('#register-form .auth-error');
+        
+        if (errorEl) errorEl.classList.remove('show');
+        
+        if (!name || !email || !password) {
+          if (errorEl) { errorEl.textContent = 'Please fill in all fields'; errorEl.classList.add('show'); }
+          return;
+        }
+        
+        if (password !== confirm) {
+          if (errorEl) { errorEl.textContent = 'Passwords do not match'; errorEl.classList.add('show'); }
+          return;
+        }
+        
+        if (password.length < 6) {
+          if (errorEl) { errorEl.textContent = 'Password must be at least 6 characters'; errorEl.classList.add('show'); }
+          return;
+        }
+        
+        const result = register(name, email, password);
+        if (result.success) {
+          closeAuthModal();
+          updateAuthUI();
+          showToast('Welcome to Ounin! You got 100 welcome points!');
+        } else {
+          if (errorEl) { errorEl.textContent = result.message; errorEl.classList.add('show'); }
+        }
+      });
+    }
+
+    // Account button click handler
+    const accountBtn = document.querySelector('a[aria-label="Account"]');
+    if (accountBtn) {
+      accountBtn.addEventListener('click', (e) => {
+        const user = getCurrentUser();
+        if (!user) {
+          e.preventDefault();
+          openAuthModal();
+        }
+      });
+    }
+
+    // Check if user is logged in, if not show login modal
+    const user = getCurrentUser();
+    // Don't auto-show modal on page load - only on click
+  </script>
   <script>
     // Floating popup logic
     const popup = document.getElementById('floating-popup');
