@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart - Ounin</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+  <style>
+    .cart-page {
+      min-height: 100vh;
+      background-color: var(--color-background);
+      padding-top: 100px;
+      padding-bottom: 60px;
+    }
+
+    .cart-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .cart-title {
+      font-size: 36px;
+      font-weight: 300;
+      color: var(--color-secondary);
+      margin-bottom: 8px;
+    }
+
+    .cart-subtitle {
+      font-size: 14px;
+      color: var(--color-text-light);
+    }
+
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 40px;
+    }
+
+    .cart-items {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      gap: 24px;
+      padding: 24px;
+      border-bottom: 1px solid var(--color-border);
+      align-items: center;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item-image {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+
+    .cart-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cart-item-name {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-secondary);
+    }
+
+    .cart-item-meta {
+      font-size: 13px;
+      color: var(--color-text-light);
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+    }
+
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: var(--color-secondary);
+      cursor: pointer;
+    }
+
+    .qty-value {
+      width: 40px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .cart-item-price {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-secondary);
+      text-align: right;
+    }
+
+    .cart-item-remove {
+      background: none;
+      border: none;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      padding: 8px;
+      transition: color var(--transition-fast);
+    }
+
+    .cart-item-remove:hover {
+      color: #dc3545;
+    }
+
+    .cart-summary {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: 32px;
+      height: fit-content;
+      position: sticky;
+      top: 120px;
+    }
+
+    .summary-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-secondary);
+      margin-bottom: 24px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--color-text-light);
+    }
+
+    .summary-row.total {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-secondary);
+      padding-top: 16px;
+      border-top: 1px solid var(--color-border);
+      margin-top: 16px;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 16px;
+      background-color: var(--color-primary);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: background-color var(--transition-fast);
+    }
+
+    .checkout-btn:hover {
+      background-color: var(--color-primary-dark);
+    }
+
+    .summary-note {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .member-discount {
+      background-color: #D4EDDA;
+      color: #155724;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .member-discount svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    .empty-cart-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      color: var(--color-text-muted);
+    }
+
+    .empty-cart-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-secondary);
+      margin-bottom: 8px;
+    }
+
+    .empty-cart-text {
+      font-size: 14px;
+      color: var(--color-text-light);
+      margin-bottom: 24px;
+    }
+
+    .empty-cart-btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background-color: var(--color-primary);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+      transition: background-color var(--transition-fast);
+    }
+
+    .empty-cart-btn:hover {
+      background-color: var(--color-primary-dark);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .cart-layout {
+        grid-template-columns: 1fr;
+      }
+      .cart-item {
+        grid-template-columns: 80px 1fr;
+        gap: 16px;
+      }
+      .cart-item-price {
+        grid-column: 2;
+        text-align: left;
+      }
+      .cart-item-actions {
+        grid-column: 1 / -1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PROMO BAR -->
+  <div class="promo-bar">
+    <div class="promo-track">
+      <span class="promo-item">Free shipping over $135</span>
+      <span class="promo-item"> - </span>
+      <span class="promo-item">2-year warranty</span>
+      <span class="promo-item"> - </span>
+      <span class="promo-item">100-day trial</span>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-inner">
+        <div class="navbar-nav">
+          <a href="products.html" class="nav-link">Sale</a>
+          <a href="recipes.html" class="nav-link">Recipes</a>
+          <a href="blog.html" class="nav-link">Blog</a>
+          <a href="about.html" class="nav-link">Our Story</a>
+          <a href="faq.html" class="nav-link">FAQ</a>
+        </div>
+        <a href="index.html" class="navbar-brand">OUNIN</a>
+        <div class="navbar-actions">
+          <a href="search.html" class="nav-btn" aria-label="Search">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/></svg>
+          </a>
+          <a href="account.html" class="nav-btn" aria-label="Account">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          </a>
+          <a href="cart.html" class="nav-btn cart-wrapper" aria-label="Cart">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            <span class="cart-count" id="cart-count">0</span>
+          </a>
+          <button class="nav-btn mobile-menu-btn" aria-label="Menu" id="mobile-menu-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+      <span class="navbar-brand">OUNIN</span>
+      <button class="nav-btn" id="mobile-menu-close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="mobile-menu-content">
+      <a href="products.html" class="mobile-nav-link">Sale</a>
+      <a href="recipes.html" class="mobile-nav-link">Recipes</a>
+      <a href="blog.html" class="mobile-nav-link">Blog</a>
+      <a href="about.html" class="mobile-nav-link">Our Story</a>
+      <a href="faq.html" class="mobile-nav-link">FAQ</a>
+      <a href="contact.html" class="mobile-nav-link">Contact</a>
+    </div>
+  </div>
+
+  <!-- CART PAGE -->
+  <section class="cart-page">
+    <div class="container">
+      <div class="cart-header">
+        <h1 class="cart-title">Shopping Cart</h1>
+        <p class="cart-subtitle" id="cart-item-count">0 items</p>
+      </div>
+
+      <div id="cart-content">
+        <!-- Content loaded by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-logo">OUNIN</a>
+          <p class="footer-tagline">An Ode to the Heart of the Home</p>
+        </div>
+        <div class="footer-links">
+          <h4>Shop</h4>
+          <a href="products.html">All Products</a>
+          <a href="recipes.html">Recipes</a>
+          <a href="blog.html">Blog</a>
+          <a href="faq.html">FAQ</a>
+        </div>
+        <div class="footer-links">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="footer-links">
+          <h4>Support</h4>
+          <a href="faq.html">FAQ</a>
+          <a href="contact.html">Contact Us</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Ounin. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    function renderCart() {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const cartContent = document.getElementById('cart-content');
+      const itemCountEl = document.getElementById('cart-item-count');
+
+      if (cart.length === 0) {
+        cartContent.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-cart-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            </div>
+            <h2 class="empty-cart-title">Your cart is empty</h2>
+            <p class="empty-cart-text">Looks like you haven't added anything to your cart yet.</p>
+            <a href="products.html" class="empty-cart-btn">Start Shopping</a>
+          </div>
+        `;
+        itemCountEl.textContent = '0 items';
+        return;
+      }
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const memberDiscount = subtotal * 0.15; // 15% Gold member discount
+      const shipping = subtotal >= 135 ? 0 : 15;
+      const total = subtotal - memberDiscount + shipping;
+
+      itemCountEl.textContent = `${cart.length} item${cart.length > 1 ? 's' : ''}`;
+
+      const itemsHTML = cart.map((item, index) => `
+        <div class="cart-item">
+          <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-meta">Unit price: $${item.price}</div>
+            <div class="cart-item-actions">
+              <div class="qty-control">
+                <button class="qty-btn" onclick="updateQty(${index}, -1)">−</button>
+                <span class="qty-value">${item.quantity}</span>
+                <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+              </div>
+              <button class="cart-item-remove" onclick="removeFromCart(${index})">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cart-item-price">$${item.price * item.quantity}</div>
+        </div>
+      `).join('');
+
+      cartContent.innerHTML = `
+        <div class="cart-layout">
+          <div class="cart-items">${itemsHTML}</div>
+          <div class="cart-summary">
+            <h3 class="summary-title">Order Summary</h3>
+            <div class="member-discount">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+              Gold Member 15% discount applied!
+            </div>
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>$${subtotal.toFixed(2)}</span>
+            </div>
+            <div class="summary-row">
+              <span>Member Discount</span>
+              <span style="color: #28a745;">-$${memberDiscount.toFixed(2)}</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span>${shipping === 0 ? 'Free' : '$' + shipping.toFixed(2)}</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span>$${total.toFixed(2)}</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+            <p class="summary-note">Free shipping on orders over $135</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateQty(index, change) {
+      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      cart[index].quantity += change;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+      updateCartCount();
+    }
+
+    function removeFromCart(index) {
+      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+      updateCartCount();
+    }
+
+    function checkout() {
+      alert('Checkout functionality coming soon!');
+    }
+
+    // Initialize
+    renderCart();
+  </script>
+</body>
+</html>
