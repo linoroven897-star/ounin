@@ -376,7 +376,7 @@
   <script src="assets/js/auth.js"></script>
   <script>
     function renderCart() {
-      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const cart = JSON.parse(localStorage.getItem('ounin-cart') || '[]');
       const cartContent = document.getElementById('cart-content');
       const itemCountEl = document.getElementById('cart-item-count');
 
@@ -395,7 +395,7 @@
         return;
       }
 
-      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
       const memberDiscount = subtotal * 0.15; // 15% Gold member discount
       const shipping = subtotal >= 135 ? 0 : 15;
       const total = subtotal - memberDiscount + shipping;
@@ -410,8 +410,8 @@
             <div class="cart-item-meta">Unit price: $${item.price}</div>
             <div class="cart-item-actions">
               <div class="qty-control">
-                <button class="qty-btn" onclick="updateQty(${index}, -1)">−</button>
-                <span class="qty-value">${item.quantity}</span>
+                <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+                <span class="qty-value">${item.qty}</span>
                 <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
               </div>
               <button class="cart-item-remove" onclick="removeFromCart(${index})">
@@ -419,7 +419,7 @@
               </button>
             </div>
           </div>
-          <div class="cart-item-price">$${item.price * item.quantity}</div>
+          <div class="cart-item-price">$${item.price * item.qty}</div>
         </div>
       `).join('');
 
@@ -456,20 +456,20 @@
     }
 
     function updateQty(index, change) {
-      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      cart[index].quantity += change;
-      if (cart[index].quantity <= 0) {
+      let cart = JSON.parse(localStorage.getItem('ounin-cart') || '[]');
+      cart[index].qty += change;
+      if (cart[index].qty <= 0) {
         cart.splice(index, 1);
       }
-      localStorage.setItem('cart', JSON.stringify(cart));
+      localStorage.setItem('ounin-cart', JSON.stringify(cart));
       renderCart();
       updateCartCount();
     }
 
     function removeFromCart(index) {
-      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      let cart = JSON.parse(localStorage.getItem('ounin-cart') || '[]');
       cart.splice(index, 1);
-      localStorage.setItem('cart', JSON.stringify(cart));
+      localStorage.setItem('ounin-cart', JSON.stringify(cart));
       renderCart();
       updateCartCount();
     }
