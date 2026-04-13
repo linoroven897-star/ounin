@@ -1060,6 +1060,16 @@
       const user = getCurrentUser();
       if (user) return; // Already logged in, don't show
 
+      // Check if user just logged out - show login popup instead
+      const showLoginAfterLogout = sessionStorage.getItem('showLoginAfterLogout');
+      if (showLoginAfterLogout) {
+        sessionStorage.removeItem('showLoginAfterLogout');
+        setTimeout(() => {
+          openAuthModal(false);
+        }, 300);
+        return;
+      }
+
       const lastShown = localStorage.getItem('regPopupShown');
       const sevenDays = 7 * 24 * 60 * 60 * 1000;
       

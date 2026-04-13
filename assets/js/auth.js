@@ -76,6 +76,9 @@ function login(email, password) {
 // Logout user
 function logout() {
   localStorage.removeItem('currentUser');
+  // Set flag to show login popup after redirect
+  sessionStorage.setItem('showLoginAfterLogout', '1');
+  // Redirect to index
   window.location.href = 'index.html';
 }
 
