@@ -76,6 +76,12 @@
 
   <!-- SEARCH MODAL -->
   <div class="search-modal" id="search-modal">
+    <!-- Overlay click to close -->
+    <div class="search-modal-overlay" id="search-overlay"></div>
+    <!-- Top right close button -->
+    <button class="search-modal-close-wrapper search-close" id="search-close-top" aria-label="Close search">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
     <div class="search-modal-content">
       <div class="search-input-wrapper">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/></svg>
@@ -85,7 +91,7 @@
         </button>
       </div>
       <div class="search-results" id="search-results">
-        <p class="search-hint">Start typing to search...</p>
+        <p class="search-hint">Search for products, recipes, or anything else...</p>
       </div>
     </div>
   </div>
@@ -762,7 +768,8 @@
     cookieAccept.addEventListener('click', () => {
       popup.classList.remove('active');
       localStorage.setItem('cookieConsent', 'accepted');
-    });</script>
+    });
+</script>
 </body>
 </html>
 

@@ -104,19 +104,38 @@
   // SEARCH DATA
   // ========================================
   const searchableItems = [
-    { type: 'product', name: 'Ounin Pro Embedded', url: 'products.html' },
-    { type: 'product', name: 'Ounin Compact', url: 'products.html' },
-    { type: 'product', name: 'Ounin Mini', url: 'products.html' },
+    // Products
+    { type: 'product', name: 'Ounin Pro Embedded Steam Oven', url: 'products.html' },
+    { type: 'product', name: 'Ounin Compact Steam Oven', url: 'products.html' },
+    { type: 'product', name: 'Ounin Mini Steam Oven', url: 'products.html' },
     { type: 'product', name: 'Ounin Elite Bundle', url: 'products.html' },
     { type: 'product', name: 'Premium Accessory Kit', url: 'products.html' },
+    { type: 'product', name: 'Steam Oven Accessories', url: 'products.html' },
+    // Recipes
     { type: 'recipe', name: 'Garlic Steam Prawns', url: 'recipe-detail.html' },
-    { type: 'recipe', name: 'Perfect Sourdough', url: 'recipe-detail.html' },
+    { type: 'recipe', name: 'Perfect Sourdough Bread', url: 'recipe-detail.html' },
     { type: 'recipe', name: 'Steam Roast Chicken', url: 'recipe-detail.html' },
     { type: 'recipe', name: 'Garden Vegetables', url: 'recipe-detail.html' },
+    { type: 'recipe', name: 'Salmon with Herbs', url: 'recipe-detail.html' },
+    { type: 'recipe', name: 'Crème Brûlée', url: 'recipe-detail.html' },
+    // Blog
+    { type: 'blog', name: 'The Art of Steaming', url: 'blog-steam-temperature.html' },
+    { type: 'blog', name: 'Bakery-Quality Bread at Home', url: 'blog-bread.html' },
+    { type: 'blog', name: 'Fish That Falls Apart', url: 'blog-fish.html' },
+    { type: 'blog', name: 'Sunday Prep, Weeknight Ease', url: 'blog-meal-prep.html' },
+    { type: 'blog', name: 'The Vegetable Revolution', url: 'blog-vegetables.html' },
+    { type: 'blog', name: 'Steam Oven Care Guide', url: 'blog-care.html' },
+    { type: 'blog', name: 'Beyond Cheesecake Desserts', url: 'blog-desserts.html' },
+    { type: 'blog', name: 'Steam Oven vs Conventional', url: 'blog-oven-comparison.html' },
+    { type: 'blog', name: 'The Golden Rule of Roast Chicken', url: 'blog-chicken.html' },
+    // Pages
     { type: 'page', name: 'Our Story', url: 'about.html' },
     { type: 'page', name: 'Contact Us', url: 'contact.html' },
     { type: 'page', name: 'Shop All Products', url: 'products.html' },
-    { type: 'page', name: 'Recipes', url: 'recipes.html' }
+    { type: 'page', name: 'Recipes', url: 'recipes.html' },
+    { type: 'page', name: 'Blog', url: 'blog.html' },
+    { type: 'page', name: 'FAQ', url: 'faq.html' },
+    { type: 'page', name: 'Cookie Policy', url: 'faq.html' }
   ];
 
   // ========================================
@@ -178,7 +197,7 @@
     const query = e.target.value.toLowerCase().trim();
     
     if (query.length < 2) {
-      searchResults.innerHTML = '<p class="search-hint">Start typing to search...</p>';
+      searchResults.innerHTML = '<p class="search-hint">Search for products, recipes, or anything else...</p>';
       return;
     }
 
@@ -217,6 +236,18 @@
       closeSearch();
     }
   });
+
+  // Search overlay click to close
+  const searchOverlay = document.getElementById('search-overlay');
+  if (searchOverlay) {
+    searchOverlay.addEventListener('click', closeSearch);
+  }
+
+  // Search top close button
+  const searchCloseTop = document.getElementById('search-close-top');
+  if (searchCloseTop) {
+    searchCloseTop.addEventListener('click', closeSearch);
+  }
 
   // ========================================
   // CART MANAGEMENT
