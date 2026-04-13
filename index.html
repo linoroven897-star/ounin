@@ -904,10 +904,10 @@
           setTimeout(() => {
             closeAuthModal();
             updateAuthUI();
-            showToast('Welcome back, ' + result.user.name + '!');
-            if (window.location.pathname.includes('account.html')) {
-              location.reload();
-            }
+            // Set flag for welcome message on account page
+            sessionStorage.setItem('justLoggedIn', '1');
+            // Redirect to account page
+            window.location.href = 'account.html';
           }, 500);
         } else {
           if (errorEl) {
@@ -949,6 +949,10 @@
           closeAuthModal();
           updateAuthUI();
           showToast('Welcome to Ounin! You got 100 welcome points!');
+          // Set flag for welcome message on account page
+          sessionStorage.setItem('justLoggedIn', '1');
+          // Redirect to account page
+          window.location.href = 'account.html';
         } else {
           if (errorEl) { errorEl.textContent = result.message; errorEl.classList.add('show'); }
         }

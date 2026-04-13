@@ -81,28 +81,44 @@
     .logout-btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      margin-top: 12px;
-      background: var(--color-background);
-      border: 1px solid var(--color-border);
+      gap: 8px;
+      padding: 10px 20px;
+      margin-top: 14px;
+      background: transparent;
+      border: 2px solid var(--color-border);
       border-radius: var(--radius-sm);
-      font-size: 13px;
-      font-weight: 500;
+      font-size: 14px;
+      font-weight: 600;
       color: var(--color-text-light);
       cursor: pointer;
-      transition: all var(--transition-fast);
+      transition: all 0.2s ease;
     }
 
     .logout-btn:hover {
-      background: #fee2e2;
+      background: #fef2f2;
       border-color: #ef4444;
       color: #dc2626;
+      transform: translateY(-1px);
+    }
+
+    .logout-btn:active {
+      transform: translateY(0);
     }
 
     .logout-btn svg {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Account Header Actions */
+    .account-header-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .account-header-actions .logout-btn {
+      margin-top: 0;
     }
 
     /* Points Overview */
@@ -821,6 +837,8 @@
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
               <span id="membership-tier">Gold Member</span>
             </div>
+          </div>
+          <div class="account-header-actions">
             <button class="logout-btn" id="logout-btn">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
               Sign Out
@@ -1190,6 +1208,16 @@
         if (typeof renderWishlist === 'function') renderWishlist();
         if (typeof renderPointsHistory === 'function') renderPointsHistory();
         if (typeof updateTierProgress === 'function') updateTierProgress();
+        
+        // Show welcome message if just logged in
+        if (sessionStorage.getItem('justLoggedIn')) {
+          sessionStorage.removeItem('justLoggedIn');
+          setTimeout(() => {
+            if (typeof showToast === 'function') {
+              showToast('Welcome back, ' + accountData.name + '!');
+            }
+          }, 500);
+        }
       }
     });
 
