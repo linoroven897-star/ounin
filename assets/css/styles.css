@@ -3294,13 +3294,10 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
   visibility: hidden;
-  transition: opacity var(--transition-normal), visibility var(--transition-normal);
 }
 
 .reg-popup.active {
-  opacity: 1;
   visibility: visible;
 }
 
@@ -3310,8 +3307,14 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  will-change: opacity;
+}
+
+.reg-popup.active .reg-popup-overlay {
+  opacity: 1;
 }
 
 .reg-popup-content {
@@ -3325,11 +3328,14 @@ h1, h2, h3, h4, h5, h6 {
   padding: 40px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   transform: translateY(20px) scale(0.95);
-  transition: transform var(--transition-normal);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  will-change: transform, opacity;
 }
 
 .reg-popup.active .reg-popup-content {
   transform: translateY(0) scale(1);
+  opacity: 1;
 }
 
 .reg-popup-close {
