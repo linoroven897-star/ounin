@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://linoroven897-star.github.io/ounin-clone/sitemap.xml
+
+# Disallow admin areas (if any)
+Disallow: /admin/
+Disallow: /*.json$
