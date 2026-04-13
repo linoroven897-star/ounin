@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search - Ounin Steam Ovens</title>
+  <meta name="description" content="Search for products, recipes, and more on Ounin.">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+  <style>
+    /* Search Page Styles */
+    .search-page {
+      min-height: 100vh;
+      background-color: var(--color-background);
+      padding-top: 120px;
+      padding-bottom: 60px;
+    }
+
+    .search-page-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .search-page-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-bottom: 16px;
+    }
+
+    .search-page-input-wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-page-input {
+      width: 100%;
+      padding: 20px 60px 20px 24px;
+      font-size: 18px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background-color: var(--color-surface);
+      color: var(--color-secondary);
+      transition: border-color var(--transition-fast);
+    }
+
+    .search-page-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .search-page-input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .search-page-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-muted);
+    }
+
+    .search-page-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .search-page-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .search-section {
+      margin-bottom: 48px;
+    }
+
+    .search-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-bottom: 16px;
+    }
+
+    /* Popular Searches */
+    .popular-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .popular-tag {
+      padding: 10px 20px;
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 50px;
+      font-size: 14px;
+      color: var(--color-secondary);
+      text-decoration: none;
+      transition: all var(--transition-fast);
+    }
+
+    .popular-tag:hover {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+
+    /* Quick Links Grid */
+    .quick-links-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .quick-link-card {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      text-decoration: none;
+      transition: all var(--transition-fast);
+      border: 1px solid var(--color-border);
+    }
+
+    .quick-link-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    .quick-link-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      background-color: var(--color-background);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+    }
+
+    .quick-link-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .quick-link-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-secondary);
+    }
+
+    /* Search Results */
+    .search-results-section {
+      display: none;
+    }
+
+    .search-results-section.active {
+      display: block;
+    }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+      background-color: var(--color-surface);
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: all var(--transition-fast);
+    }
+
+    .search-result-item:hover {
+      border-color: var(--color-primary);
+    }
+
+    .search-result-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-sm);
+      background-color: var(--color-background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .search-result-icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--color-primary);
+    }
+
+    .search-result-info {
+      flex: 1;
+    }
+
+    .search-result-type {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: 4px;
+    }
+
+    .search-result-name {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-secondary);
+      margin-bottom: 4px;
+    }
+
+    .search-result-desc {
+      font-size: 13px;
+      color: var(--color-text-light);
+    }
+
+    .search-result-arrow {
+      color: var(--color-text-muted);
+    }
+
+    .search-result-arrow svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 24px;
+    }
+
+    .no-results-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      color: var(--color-text-muted);
+    }
+
+    .no-results-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--color-secondary);
+      margin-bottom: 8px;
+    }
+
+    .no-results-text {
+      font-size: 14px;
+      color: var(--color-text-light);
+    }
+
+    /* Back Link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 32px;
+      font-size: 14px;
+      color: var(--color-text-light);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    .back-link:hover {
+      color: var(--color-primary);
+    }
+
+    .back-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .quick-links-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PROMO BAR -->
+  <div class="promo-bar">
+    <div class="promo-track">
+      <span class="promo-item">Free shipping over $135</span>
+      <span class="promo-item"> - </span>
+      <span class="promo-item">2-year warranty</span>
+      <span class="promo-item"> - </span>
+      <span class="promo-item">100-day trial</span>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-inner">
+        <div class="navbar-nav">
+          <a href="products.html" class="nav-link">Sale</a>
+          <a href="recipes.html" class="nav-link">Recipes</a>
+          <a href="blog.html" class="nav-link">Blog</a>
+          <a href="about.html" class="nav-link">Our Story</a>
+          <a href="faq.html" class="nav-link">FAQ</a>
+        </div>
+        <a href="index.html" class="navbar-brand">OUNIN</a>
+        <div class="navbar-actions">
+          <button class="nav-btn" aria-label="Search" id="search-btn" onclick="window.location.href='search.html'">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/></svg>
+          </button>
+          <button class="nav-btn" aria-label="Account" id="account-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          </button>
+          <button class="nav-btn cart-wrapper" aria-label="Cart" id="cart-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            <span class="cart-count" id="cart-count">0</span>
+          </button>
+          <button class="nav-btn mobile-menu-btn" aria-label="Menu" id="mobile-menu-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+      <span class="navbar-brand">OUNIN</span>
+      <button class="nav-btn" id="mobile-menu-close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="mobile-menu-content">
+      <a href="products.html" class="mobile-nav-link">Sale</a>
+      <a href="recipes.html" class="mobile-nav-link">Recipes</a>
+      <a href="blog.html" class="mobile-nav-link">Blog</a>
+      <a href="about.html" class="mobile-nav-link">Our Story</a>
+      <a href="faq.html" class="mobile-nav-link">FAQ</a>
+      <a href="contact.html" class="mobile-nav-link">Contact</a>
+    </div>
+  </div>
+
+  <!-- SEARCH PAGE -->
+  <section class="search-page">
+    <div class="container">
+      <a href="index.html" class="back-link">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Home
+      </a>
+
+      <div class="search-page-header">
+        <h1 class="search-page-title">What are you looking for?</h1>
+        <div class="search-page-input-wrapper">
+          <input type="text" class="search-page-input" id="search-input-page" placeholder="Search products, recipes, blog posts..." autofocus>
+          <span class="search-page-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/></svg>
+          </span>
+        </div>
+      </div>
+
+      <div class="search-page-content">
+        <!-- Search Results (hidden by default) -->
+        <div class="search-results-section" id="search-results-page">
+          <div class="search-section">
+            <h2 class="search-section-title">Results</h2>
+            <div id="results-container"></div>
+          </div>
+        </div>
+
+        <!-- Default Content (shown when no search) -->
+        <div id="default-content">
+          <!-- Popular Searches -->
+          <div class="search-section">
+            <h2 class="search-section-title">Popular Searches</h2>
+            <div class="popular-tags">
+              <a href="products.html" class="popular-tag">Steam Oven</a>
+              <a href="products.html" class="popular-tag">Pro Embedded</a>
+              <a href="products.html" class="popular-tag">Compact</a>
+              <a href="recipes.html" class="popular-tag">Bread</a>
+              <a href="recipes.html" class="popular-tag">Chicken</a>
+              <a href="recipes.html" class="popular-tag">Fish</a>
+              <a href="blog.html" class="popular-tag">Cooking Tips</a>
+              <a href="faq.html" class="popular-tag">Shipping</a>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="search-section">
+            <h2 class="search-section-title">Browse Categories</h2>
+            <div class="quick-links-grid">
+              <a href="products.html" class="quick-link-card">
+                <div class="quick-link-icon">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                </div>
+                <span class="quick-link-name">All Products</span>
+              </a>
+              <a href="recipes.html" class="quick-link-card">
+                <div class="quick-link-icon">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+                <span class="quick-link-name">Recipes</span>
+              </a>
+              <a href="blog.html" class="quick-link-card">
+                <div class="quick-link-icon">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+                </div>
+                <span class="quick-link-name">Blog</span>
+              </a>
+              <a href="faq.html" class="quick-link-card">
+                <div class="quick-link-icon">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <span class="quick-link-name">FAQ</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-logo">OUNIN</a>
+          <p class="footer-tagline">An Ode to the Heart of the Home</p>
+        </div>
+        <div class="footer-links">
+          <h4>Shop</h4>
+          <a href="products.html">All Products</a>
+          <a href="recipes.html">Recipes</a>
+          <a href="blog.html">Blog</a>
+          <a href="faq.html">FAQ</a>
+        </div>
+        <div class="footer-links">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="footer-links">
+          <h4>Support</h4>
+          <a href="faq.html">FAQ</a>
+          <a href="contact.html">Contact Us</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Ounin. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    // Search functionality
+    const searchData = [
+      // Products
+      { type: 'Product', name: 'Ounin Pro Embedded', desc: '75L capacity, 12 cooking modes, WiFi connected', url: 'products.html' },
+      { type: 'Product', name: 'Ounin Compact', desc: '40L capacity, 8 cooking modes, countertop design', url: 'products.html' },
+      { type: 'Product', name: 'Ounin Mini', desc: '25L capacity, 5 cooking modes, portable', url: 'products.html' },
+      { type: 'Product', name: 'Ounin Elite Bundle', desc: 'Pro oven + accessories + cookbook', url: 'products.html' },
+      { type: 'Product', name: 'Premium Accessory Kit', desc: 'Steam tray, wire rack, cookbook, cleaning kit', url: 'products.html' },
+      // Recipes
+      { type: 'Recipe', name: 'Garlic Steam Prawns', desc: 'Quick and flavorful seafood in 10 minutes', url: 'recipe-detail.html' },
+      { type: 'Recipe', name: 'Perfect Sourdough', desc: 'Artisan bread with crispy crust', url: 'recipe-detail.html' },
+      { type: 'Recipe', name: 'Steam Roast Chicken', desc: 'Juicy chicken with crispy golden skin', url: 'recipe-detail.html' },
+      { type: 'Recipe', name: 'Garden Vegetables', desc: 'Healthy steamed vegetables with herbs', url: 'recipe-detail.html' },
+      { type: 'Recipe', name: 'Salmon with Herbs', desc: 'Perfectly steamed salmon fillet', url: 'recipe-detail.html' },
+      // Blog
+      { type: 'Blog', name: 'The Art of Steaming', desc: 'Why water temperature matters', url: 'blog-steam-temperature.html' },
+      { type: 'Blog', name: 'Bakery-Quality Bread at Home', desc: 'The steam oven secret', url: 'blog-bread.html' },
+      { type: 'Blog', name: 'Fish That Falls Apart', desc: 'Mastering delicate proteins', url: 'blog-fish.html' },
+      { type: 'Blog', name: 'Sunday Prep, Weeknight Ease', desc: 'Meal planning with steam ovens', url: 'blog-meal-prep.html' },
+      { type: 'Blog', name: 'The Vegetable Revolution', desc: 'Nutrient preservation in steaming', url: 'blog-vegetables.html' },
+      { type: 'Blog', name: 'Steam Oven Care Guide', desc: '5 habits of highly effective owners', url: 'blog-care.html' },
+      { type: 'Blog', name: 'Beyond Cheesecake', desc: 'Unexpected desserts in your steam oven', url: 'blog-desserts.html' },
+      { type: 'Blog', name: 'Steam vs Conventional Oven', desc: 'Which is worth your counter space?', url: 'blog-oven-comparison.html' },
+      { type: 'Blog', name: 'The Golden Rule of Roast Chicken', desc: 'Steam first, sear second', url: 'blog-chicken.html' },
+      // Pages
+      { type: 'Page', name: 'Our Story', desc: 'About Ounin and our mission', url: 'about.html' },
+      { type: 'Page', name: 'Contact Us', desc: 'Get in touch with our team', url: 'contact.html' },
+      { type: 'Page', name: 'FAQ', desc: 'Frequently asked questions', url: 'faq.html' },
+      { type: 'Page', name: 'Cookie Policy', desc: 'How we use cookies', url: 'faq.html' }
+    ];
+
+    const searchInput = document.getElementById('search-input-page');
+    const resultsContainer = document.getElementById('results-container');
+    const resultsSection = document.getElementById('search-results-page');
+    const defaultContent = document.getElementById('default-content');
+
+    function performSearch(query) {
+      if (!query.trim()) {
+        resultsSection.classList.remove('active');
+        defaultContent.style.display = 'block';
+        return;
+      }
+
+      const lowerQuery = query.toLowerCase();
+      const results = searchData.filter(item =>
+        item.name.toLowerCase().includes(lowerQuery) ||
+        item.desc.toLowerCase().includes(lowerQuery) ||
+        item.type.toLowerCase().includes(lowerQuery)
+      );
+
+      defaultContent.style.display = 'none';
+      resultsSection.classList.add('active');
+
+      if (results.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="no-results">
+            <div class="no-results-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/></svg>
+            </div>
+            <h3 class="no-results-title">No results found</h3>
+            <p class="no-results-text">Try searching for something else, or browse our categories below.</p>
+          </div>
+        `;
+        return;
+      }
+
+      resultsContainer.innerHTML = results.map(item => `
+        <a href="${item.url}" class="search-result-item">
+          <div class="search-result-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <div class="search-result-info">
+            <span class="search-result-type">${item.type}</span>
+            <h3 class="search-result-name">${item.name}</h3>
+            <p class="search-result-desc">${item.desc}</p>
+          </div>
+          <div class="search-result-arrow">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    // Debounce function
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    const debouncedSearch = debounce((e) => performSearch(e.target.value), 300);
+
+    searchInput.addEventListener('input', debouncedSearch);
+
+    // Check URL params for search query
+    const urlParams = new URLSearchParams(window.location.search);
+    const q = urlParams.get('q');
+    if (q) {
+      searchInput.value = q;
+      performSearch(q);
+    }
+  </script>
+</body>
+</html>
