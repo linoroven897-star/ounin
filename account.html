@@ -1134,7 +1134,14 @@
         
         // Update profile form
         const profileEmail = document.getElementById('profile-email');
+        const profileFirstname = document.getElementById('profile-firstname');
+        const profileLastname = document.getElementById('profile-lastname');
         if (profileEmail) profileEmail.value = accountData.email;
+        if (accountData.name) {
+          const nameParts = accountData.name.split(' ');
+          if (profileFirstname) profileFirstname.value = nameParts[0] || '';
+          if (profileLastname) profileLastname.value = nameParts.slice(1).join(' ') || '';
+        }
         
         // Update points display
         const pointsBalance = document.getElementById('points-balance');
