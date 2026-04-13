@@ -1036,12 +1036,10 @@
 
     function openRegPopup() {
       regPopup.classList.add('active');
-      document.body.style.overflow = 'hidden';
     }
 
     function closeRegPopup() {
       regPopup.classList.remove('active');
-      document.body.style.overflow = '';
     }
 
     if (regPopupOverlay) regPopupOverlay.addEventListener('click', closeRegPopup);
