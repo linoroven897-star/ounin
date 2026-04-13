@@ -783,6 +783,9 @@
         <button class="reg-popup-btn reg-popup-btn-secondary" id="reg-popup-login">Already have an account? Sign In</button>
       </div>
       <p class="reg-popup-note">No credit card required. Cancel anytime.</p>
+      <p class="reg-popup-browse">
+        Not ready? <a href="#" id="reg-popup-browse">Continue browsing, register later</a>
+      </p>
     </div>
   </div>
 
@@ -1029,6 +1032,7 @@
     const regPopupClose = document.getElementById('reg-popup-close');
     const regPopupCTA = document.getElementById('reg-popup-cta');
     const regPopupLogin = document.getElementById('reg-popup-login');
+    const regPopupBrowse = document.getElementById('reg-popup-browse');
 
     function openRegPopup() {
       regPopup.classList.add('active');
@@ -1054,6 +1058,13 @@
       regPopupLogin.addEventListener('click', () => {
         closeRegPopup();
         setTimeout(() => openAuthModal(false), 200);
+      });
+    }
+
+    if (regPopupBrowse) {
+      regPopupBrowse.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeRegPopup();
       });
     }
 

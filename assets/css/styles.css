@@ -3496,6 +3496,23 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 16px;
 }
 
+.reg-popup-browse {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-light);
+  margin-top: 12px;
+}
+
+.reg-popup-browse a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.reg-popup-browse a:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 480px) {
   .reg-popup-content {
     padding: 28px 20px;
