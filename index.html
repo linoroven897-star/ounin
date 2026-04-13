@@ -1038,8 +1038,6 @@
     function closeRegPopup() {
       regPopup.classList.remove('active');
       document.body.style.overflow = '';
-      // Don't show again for 7 days
-      localStorage.setItem('regPopupShown', Date.now().toString());
     }
 
     if (regPopupOverlay) regPopupOverlay.addEventListener('click', closeRegPopup);
@@ -1059,7 +1057,7 @@
       });
     }
 
-    // Show popup on page load for non-logged-in users (only once per 7 days)
+    // Show registration popup on page load for non-logged-in users (every visit)
     document.addEventListener('DOMContentLoaded', function() {
       const user = getCurrentUser();
       if (user) return; // Already logged in, don't show
@@ -1074,16 +1072,10 @@
         return;
       }
 
-      const lastShown = localStorage.getItem('regPopupShown');
-      const sevenDays = 7 * 24 * 60 * 60 * 1000;
-      
-      // Show if never shown or shown more than 7 days ago
-      if (!lastShown || (Date.now() - parseInt(lastShown)) > sevenDays) {
-        // Delay showing popup by 5 seconds
-        setTimeout(() => {
-          openRegPopup();
-        }, 5000);
-      }
+      // Show popup after 5 seconds for every non-logged-in visitor
+      setTimeout(() => {
+        openRegPopup();
+      }, 5000);
     });
 
     // Close on Escape key
