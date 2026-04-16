@@ -629,6 +629,9 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
   margin: 0 -24px;
   padding: 0 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
 }
 
 .carousel-track {
@@ -636,12 +639,15 @@ h1, h2, h3, h4, h5, h6 {
   gap: 24px;
   align-items: stretch !important;
   transition: transform 0.5s ease;
+  width: 100%;
+  min-height: 100%;
 }
 
 .product-card {
   flex: 1;
   min-width: 0;
-  height: 100%;
+  min-height: 100%;
+  align-self: stretch;
   background-color: var(--color-surface);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -751,11 +757,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .product-info > * {
-  flex-shrink: 1;
+  flex-shrink: 0;
 }
 
 .product-info .product-name {
-  flex-shrink: 1;
+  flex-shrink: 0;
+  word-break: break-word;
 }
 
 .product-info .btn-primary {
@@ -2264,7 +2271,10 @@ h1, h2, h3, h4, h5, h6 {
    ======================================== */
 @media (max-width: 1200px) {
   .product-card {
-    flex: 0 0 calc(33.333% - 16px);
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    min-width: 0;
   }
   
   .footer-grid {
@@ -2398,7 +2408,10 @@ h1, h2, h3, h4, h5, h6 {
   }
   
   .product-card {
-    flex: 0 0 calc(50% - 12px);
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    min-width: 0;
   }
   
   .usp-grid,
