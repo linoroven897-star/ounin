@@ -644,6 +644,8 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
   transition: transform var(--transition-normal), box-shadow var(--transition-normal);
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card:hover {
@@ -741,11 +743,15 @@ h1, h2, h3, h4, h5, h6 {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  min-height: 200px;
+  flex: 1;
 }
 
 .product-info > * {
   flex-shrink: 0;
+}
+
+.product-info .btn-primary {
+  margin-top: auto;
 }
 
 .btn-add-cart {
