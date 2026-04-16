@@ -3716,3 +3716,129 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
 }
 
+
+/* ========================================
+   PRODUCT DETAIL PAGES
+   ======================================== */
+
+.product-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  padding: 80px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-hero-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.product-gallery-main img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.product-gallery-thumbs {
+  display: flex;
+  gap: 12px;
+}
+
+.product-gallery-thumbs .thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.5;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.product-gallery-thumbs .thumb.active,
+.product-gallery-thumbs .thumb:hover {
+  opacity: 1;
+  border-color: var(--color-accent);
+}
+
+.product-hero-info {
+  padding: 0 20px;
+}
+
+.product-detail-desc {
+  font-size: 18px;
+  color: var(--color-text-light);
+  margin-top: 8px;
+}
+
+.product-price-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.price-original {
+  color: var(--color-text-light);
+  text-decoration: line-through;
+  font-size: 16px;
+}
+
+.product-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.spec-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: var(--color-text);
+}
+
+.spec-item svg {
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.btn-lg {
+  padding: 16px 40px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.trust-badge {
+  font-size: 13px;
+  color: var(--color-text-light);
+  background: var(--color-bg-alt);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.bundle-includes {
+  background: var(--color-bg-alt);
+}
+
+.bundle-includes h4 {
+  font-family: var(--font-serif);
+  font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 40px 0;
+  }
+  .product-hero-info {
+    padding: 0;
+  }
+}
