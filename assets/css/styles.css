@@ -1921,6 +1921,7 @@ h1, h2, h3, h4, h5, h6 {
   height: 60vh;
   min-height: 400px;
   overflow: hidden;
+  background-color: var(--color-bg);
 }
 
 .recipe-detail-img {
@@ -1940,7 +1941,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .recipe-detail-title {
   font-size: 48px;
-  color: white;
+  color: var(--color-secondary);
   margin-bottom: 8px;
 }
 
