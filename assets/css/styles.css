@@ -559,7 +559,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .btn-add-cart:hover {
-  background-color: var(--color-primary-dark);
+  background-color: #1a1a1a;
 }
 
 /* ========================================
@@ -782,7 +782,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-add-cart {
   width: 100%;
-  background-color: var(--color-primary);
+  background-color: var(--color-secondary);
   color: white;
   flex-shrink: 0;
 }
