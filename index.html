@@ -141,10 +141,10 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-video-bg">
-      <video autoplay muted loop playsinline webkit-playsinline preload="auto" class="hero-video-desktop" id="hero-video" poster="assets/images/hero-video-poster.jpg">
+      <video autoplay muted loop playsinline webkit-playsinline preload="metadata" class="hero-video-desktop" id="hero-video">
         <source src="assets/images/hero-video.mp4" type="video/mp4">
       </video>
-      <img src="assets/images/hero-video-poster.jpg" alt="Ounin Steam Oven" class="hero-video-mobile">
+      <img src="assets/images/hero-video-poster.jpg" alt="Ounin Steam Oven" class="hero-video-mobile" loading="lazy">
       <div class="hero-overlay"></div>
     </div>
     <div class="container">
@@ -350,15 +350,15 @@
       </div>
       <div class="features-highlight-grid">
         <div class="feature-item">
-          <img src="assets/images/feature-1-poster.jpg" data-gif="assets/images/feature-1.gif" alt="Dual Cook" class="feature-gif lazy-gif" loading="lazy">
+          <img src="assets/images/feature-1.gif" alt="Dual Cook" class="feature-gif" loading="lazy" decoding="async">
           <p class="feature-caption">Dual Cook<br>Bake above and steam below simultaneously to serve a complete, flavor-packed dinner in just 20 minutes.</p>
         </div>
         <div class="feature-item">
-          <img src="assets/images/feature-2-poster.jpg" data-gif="assets/images/feature-2.gif" alt="Sous Vide" class="feature-gif lazy-gif" loading="lazy">
+          <img src="assets/images/feature-2.gif" alt="Sous Vide" class="feature-gif" loading="lazy" decoding="async">
           <p class="feature-caption">Sous Vide<br>Lock in moisture and flavor to effortlessly achieve tender, juicy, Michelin-star quality meals at home.</p>
         </div>
         <div class="feature-item">
-          <img src="assets/images/feature-3-poster.jpg" data-gif="assets/images/feature-3.gif" alt="Rotisserie" class="feature-gif lazy-gif" loading="lazy">
+          <img src="assets/images/feature-3.gif" alt="Rotisserie" class="feature-gif" loading="lazy" decoding="async">
           <p class="feature-caption">Rotisserie Roasting<br>Enjoy perfectly even heating that delivers a golden, crispy, and mouth-watering roast chicken every single time.</p>
         </div>
       </div>
@@ -1133,32 +1133,6 @@
         closeRegPopup();
       }
     });
-  </script>
-  <script>
-    // Lazy-load GIFs: replace poster JPG with animated GIF only when visible
-    (function() {
-      var lazyGifs = document.querySelectorAll('.lazy-gif');
-      if (!lazyGifs.length) return;
-      var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            var img = entry.target;
-            var gifSrc = img.getAttribute('data-gif');
-            if (gifSrc) {
-              var tempImg = new Image();
-              tempImg.onload = function() {
-                img.src = gifSrc;
-                img.removeAttribute('data-gif');
-                img.classList.remove('lazy-gif');
-              };
-              tempImg.src = gifSrc;
-            }
-            observer.unobserve(img);
-          }
-        });
-      }, { rootMargin: '200px' });
-      lazyGifs.forEach(function(img) { observer.observe(img); });
-    })();
   </script>
 </body>
 </html>
