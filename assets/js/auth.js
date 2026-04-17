@@ -219,3 +219,94 @@ function removeFromWishlist(itemName) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', initAuth);
+
+// Open auth modal (showRegister = false shows login form, true shows register form)
+function openAuthModal(showRegister) {
+  const modal = document.getElementById('auth-modal');
+  const loginForm = document.getElementById('login-form');
+  const registerForm = document.getElementById('register-form');
+  if (!modal) return;
+  modal.classList.add('active');
+  if (loginForm) loginForm.style.display = showRegister ? 'none' : 'block';
+  if (registerForm) registerForm.style.display = showRegister ? 'block' : 'none';
+  // Clear fields
+  modal.querySelectorAll('.auth-fields input').forEach(function(i){ i.value = ''; });
+  modal.querySelectorAll('.auth-error,.auth-success').forEach(function(e){ e.classList.remove('show'); });
+}
+
+// Close auth modal
+function closeAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+// Setup auth modal event listeners (call after DOM is ready)
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('auth-modal');
+  const overlay = document.getElementById('auth-overlay');
+  const closeBtn = document.getElementById('auth-close');
+  const showRegister = document.getElementById('show-register');
+  const showLogin = document.getElementById('show-login');
+  const loginBtn = document.getElementById('login-btn');
+  const registerBtn = document.getElementById('register-btn');
+
+  if (overlay) overlay.addEventListener('click', closeAuthModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeAuthModal);
+  if (showRegister) showRegister.addEventListener('click', function(e) { e.preventDefault(); openAuthModal(true); });
+  if (showLogin) showLogin.addEventListener('click', function(e) { e.preventDefault(); openAuthModal(false); });
+
+  // Account nav link click handler
+  var accountBtns = document.querySelectorAll('[aria-label="Account"]');
+  accountBtns.forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      if (!getCurrentUser()) {
+        e.preventDefault();
+        openAuthModal(false);
+      }
+    });
+  });
+
+  // Login form submission
+  if (loginBtn) {
+    loginBtn.addEventListener('click', function() {
+      var email = document.getElementById('login-email') ? document.getElementById('login-email').value : '';
+      var password = document.getElementById('login-password') ? document.getElementById('login-password').value : '';
+      var errEl = document.getElementById('login-error');
+      var sucEl = document.getElementById('login-success');
+      if (errEl) errEl.classList.remove('show');
+      var result = login(email, password);
+      if (result.success) {
+        if (sucEl) { sucEl.textContent = 'Login successful!'; sucEl.classList.add('show'); }
+        setTimeout(function() { location.reload(); }, 800);
+      } else {
+        if (errEl) { errEl.textContent = result.message; errEl.classList.add('show'); }
+      }
+    });
+  }
+
+  // Register form submission
+  if (registerBtn) {
+    registerBtn.addEventListener('click', function() {
+      var name = document.getElementById('register-name') ? document.getElementById('register-name').value : '';
+      var email = document.getElementById('register-email') ? document.getElementById('register-email').value : '';
+      var password = document.getElementById('register-password') ? document.getElementById('register-password').value : '';
+      var confirm = document.getElementById('register-confirm') ? document.getElementById('register-confirm').value : '';
+      var errEl = document.getElementById('register-error');
+      if (errEl) errEl.classList.remove('show');
+      if (!name || !email || !password) {
+        if (errEl) { errEl.textContent = 'Please fill in all fields'; errEl.classList.add('show'); }
+        return;
+      }
+      if (password !== confirm) {
+        if (errEl) { errEl.textContent = 'Passwords do not match'; errEl.classList.add('show'); }
+        return;
+      }
+      var result = register(name, email, password);
+      if (result.success) {
+        setTimeout(function() { location.reload(); }, 800);
+      } else {
+        if (errEl) { errEl.textContent = result.message; errEl.classList.add('show'); }
+      }
+    });
+  }
+});

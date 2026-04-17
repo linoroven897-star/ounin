@@ -841,7 +841,7 @@
   </div>
 
   <!-- ACCOUNT PAGE -->
-  <section class="account-page">
+  <section class="account-page" id="account-content" style="display:none;">
     <div class="account-header">
       <div class="container">
         <div class="account-welcome">
@@ -1165,9 +1165,11 @@
       const user = getCurrentUser();
       
       if (!user) {
-        // User not logged in - show login modal
+        // User not logged in - show login modal and redirect to login
         setTimeout(() => openAuthModal(false), 100);
       } else {
+        // User is logged in - show account content
+        document.getElementById('account-content').style.display = 'block';
         // User is logged in - load real data
         accountData = {
           name: user.name || '',
@@ -1477,17 +1479,5 @@
       </div>
     </div>
   </div>
-
-  <script>
-    const am=document.getElementById('auth-modal'),ao=document.getElementById('auth-overlay'),ac=document.getElementById('auth-close'),lf=document.getElementById('login-form'),rf=document.getElementById('register-form');
-    function oam(r){am.classList.add('active');lf.style.display=r?'none':'block';rf.style.display=r?'block':'none';document.querySelectorAll('.auth-fields input').forEach(i=>i.value='');document.querySelectorAll('.auth-error,.auth-success').forEach(e=>e.classList.remove('show'))}
-    ao&&ao.addEventListener('click',()=>am.classList.remove('active'));
-    ac&&ac.addEventListener('click',()=>am.classList.remove('active'));
-    document.getElementById('show-register')&&document.getElementById('show-register').addEventListener('click',e=>{e.preventDefault();oam(!0)});
-    document.getElementById('show-login')&&document.getElementById('show-login').addEventListener('click',e=>{e.preventDefault();oam(!1)});
-    document.getElementById('login-btn')&&document.getElementById('login-btn').addEventListener('click',()=>{const e=document.getElementById('login-email').value,p=document.getElementById('login-password').value,err=document.getElementById('login-error'),suc=document.getElementById('login-success');err&&err.classList.remove('show');const r=login(e,p);if(r.success){suc&&(suc.textContent='Login successful!',suc.classList.add('show'));setTimeout(()=>{location.reload()},800)}else{err&&(err.textContent=r.message,err.classList.add('show'))}});
-    document.getElementById('register-btn')&&document.getElementById('register-btn').addEventListener('click',()=>{const n=document.getElementById('register-name').value,e=document.getElementById('register-email').value,p=document.getElementById('register-password').value,c=document.getElementById('register-confirm').value,err=document.getElementById('register-error');err&&err.classList.remove('show');if(!n||!e||!p){err&&(err.textContent='Please fill in all fields',err.classList.add('show'));return}if(p!==c){err&&(err.textContent='Passwords do not match',err.classList.add('show'));return}const r=register(n,e,p);if(r.success){setTimeout(()=>{location.reload()},800)}else{err&&(err.textContent=r.message,err.classList.add('show'))}});
-    const ab=document.querySelector('a[aria-label="Account"]');ab&&ab.addEventListener('click',e=>{if(!getCurrentUser()){e.preventDefault();oam(!1)}});
-  </script>
 </body>
 </html>
