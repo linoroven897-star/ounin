@@ -404,7 +404,7 @@
 
       const itemsHTML = cart.map((item, index) => `
         <div class="cart-item">
-          <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+          <img src="${item.image}" alt="${item.name}" class="cart-item-image" loading="lazy" decoding="async">
           <div class="cart-item-info">
             <div class="cart-item-name">${item.name}</div>
             <div class="cart-item-meta">Unit price: $${item.price}</div>

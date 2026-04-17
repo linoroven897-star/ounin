@@ -1280,7 +1280,7 @@
 
         const itemsHTML = order.items.map(item => `
           <div class="order-item">
-            <img src="${item.image}" alt="${item.name}" class="order-item-image">
+            <img src="${item.image}" alt="${item.name}" class="order-item-image" loading="lazy" decoding="async">
             <div class="order-item-info">
               <div class="order-item-name">${item.name}</div>
               <div class="order-item-meta">Qty: ${item.qty}</div>
@@ -1338,7 +1338,7 @@
       wishlistItems.innerHTML = accountData.wishlist.map(item => `
         <div class="wishlist-item">
           <div class="wishlist-image">
-            <img src="${item.image}" alt="${item.name}">
+            <img src="${item.image}" alt="${item.name}" loading="lazy" decoding="async">
           </div>
           <div class="wishlist-content">
             <h4 class="wishlist-name">${item.name}</h4>
