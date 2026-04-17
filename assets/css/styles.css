@@ -769,11 +769,21 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: auto;
 }
 
+.product-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.product-buttons .btn {
+  width: 100%;
+}
+
 .btn-add-cart {
   width: 100%;
   background-color: var(--color-secondary);
   color: white;
-  margin-top: auto;
   flex-shrink: 0;
 }
 
