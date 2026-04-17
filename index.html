@@ -141,9 +141,10 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-video-bg">
-      <video autoplay muted loop playsinline webkit-playsinline preload="metadata" class="hero-video-desktop" id="hero-video" poster="assets/images/hero-video-poster.jpg">
+      <video autoplay muted loop playsinline webkit-playsinline preload="auto" class="hero-video-desktop" id="hero-video" poster="assets/images/hero-video-poster.jpg">
         <source src="assets/images/hero-video.mp4" type="video/mp4">
       </video>
+      <img src="assets/images/hero-video-poster.jpg" alt="Ounin Steam Oven" class="hero-video-mobile">
       <div class="hero-overlay"></div>
     </div>
     <div class="container">
@@ -1132,33 +1133,6 @@
         closeRegPopup();
       }
     });
-  </script>
-  <script>
-    // Lazy-load hero video: load only after page is fully loaded
-    (function() {
-      const video = document.getElementById('hero-video');
-      if (!video) return;
-      // Start loading video only after page is fully loaded + a short delay
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          if (video.readyState >= 3) {
-            // already have data, fade in immediately
-            video.classList.add('video-loaded');
-            return;
-          }
-          // trigger full video load after initial content is painted
-          video.preload = 'auto';
-          video.load();
-        }, 1500); // wait 1.5s after page load to prioritize LCP content
-      });
-      // Fade in once video can play
-      video.addEventListener('canplay', function() {
-        video.classList.add('video-loaded');
-      });
-      video.addEventListener('playing', function() {
-        video.classList.add('playing');
-      });
-    })();
   </script>
 </body>
 </html>
