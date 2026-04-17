@@ -600,7 +600,7 @@
         showToast('Your cart is empty');
         return;
       }
-      showToast('Checkout functionality coming soon!');
+      window.location.href = 'cart.html';
     });
   }
 
