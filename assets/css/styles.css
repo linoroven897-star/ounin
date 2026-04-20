@@ -108,7 +108,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   justify-content: center;
   gap: 24px;
-  animation: promo-scroll 30s linear infinite;
+  animation: promo-scroll 20s linear infinite;
 }
 
 .promo-item {
