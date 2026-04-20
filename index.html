@@ -29,6 +29,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+  <!-- Preload critical above-the-fold assets -->
+  <link rel="preload" as="image" href="assets/images/hero-banner-poster.png" fetchpriority="high">
+  <link rel="preload" as="video" href="assets/videos/hero-video.mp4" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/product-1a.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/product-2a.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/product-3a.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/product-4a.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/story-1.jpg" fetchpriority="high">
 </head>
 <body>
   <!-- JSON-LD Structured Data -->
@@ -1141,6 +1150,10 @@
 
     // Show registration popup on page load for non-logged-in users (every visit)
     document.addEventListener('DOMContentLoaded', function() {
+      // Clear justLoggedIn flag immediately so it doesn't affect this page
+      const justLoggedIn = sessionStorage.getItem('justLoggedIn');
+      sessionStorage.removeItem('justLoggedIn');
+
       const user = getCurrentUser();
       if (user) return; // Already logged in, don't show
 
@@ -1153,6 +1166,9 @@
         }, 300);
         return;
       }
+
+      // Don't show popup if user just logged in/registered (they're on their way to account page)
+      if (justLoggedIn) return;
 
       // Show popup after 5 seconds for every non-logged-in visitor
       setTimeout(() => {

@@ -22,103 +22,136 @@ function updateAuthUI() {
 
 // Get current user from localStorage
 function getCurrentUser() {
-  const userData = localStorage.getItem('currentUser');
-  return userData ? JSON.parse(userData) : null;
+  try {
+    const userData = localStorage.getItem('currentUser');
+    return userData ? JSON.parse(userData) : null;
+  } catch (e) {
+    console.warn('getCurrentUser: localStorage read error', e);
+    return null;
+  }
 }
 
 // Register new user
 function register(name, email, password) {
-  const users = getUsers();
-  
-  // Check if email already exists
-  if (users.find(u => u.email === email)) {
-    return { success: false, message: 'Email already registered' };
+  try {
+    const users = getUsers();
+    
+    // Check if email already exists
+    if (users.find(u => u.email === email)) {
+      return { success: false, message: 'Email already registered' };
+    }
+    
+    // Create new user with Bronze tier
+    const newUser = {
+      id: 'user_' + Date.now(),
+      name,
+      email,
+      password, // In production, this should be hashed
+      tier: 'bronze',
+      points: 100, // Welcome bonus
+      lifetimePoints: 100,
+      orders: [],
+      wishlist: [],
+      pointsHistory: [
+        { type: 'earned', amount: 100, title: 'Welcome Bonus', date: new Date().toISOString().split('T')[0] }
+      ],
+      addresses: [],
+      createdAt: new Date().toISOString()
+    };
+    
+    users.push(newUser);
+    saveUsers(users);
+    localStorage.setItem('currentUser', JSON.stringify(newUser));
+    
+    return { success: true, user: newUser };
+  } catch (e) {
+    console.warn('register: error', e);
+    return { success: false, message: 'Registration failed. Please try again.' };
   }
-  
-  // Create new user with Bronze tier
-  const newUser = {
-    id: 'user_' + Date.now(),
-    name,
-    email,
-    password, // In production, this should be hashed
-    tier: 'bronze',
-    points: 100, // Welcome bonus
-    lifetimePoints: 100,
-    orders: [],
-    wishlist: [],
-    pointsHistory: [
-      { type: 'earned', amount: 100, title: 'Welcome Bonus', date: new Date().toISOString().split('T')[0] }
-    ],
-    addresses: [],
-    createdAt: new Date().toISOString()
-  };
-  
-  users.push(newUser);
-  saveUsers(users);
-  localStorage.setItem('currentUser', JSON.stringify(newUser));
-  
-  return { success: true, user: newUser };
 }
 
 // Login user
 function login(email, password) {
-  const users = getUsers();
-  const user = users.find(u => u.email === email && u.password === password);
-  
-  if (!user) {
-    return { success: false, message: 'Invalid email or password' };
+  try {
+    const users = getUsers();
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (!user) {
+      return { success: false, message: 'Invalid email or password' };
+    }
+    
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    return { success: true, user };
+  } catch (e) {
+    console.warn('login: error', e);
+    return { success: false, message: 'Login failed. Please try again.' };
   }
-  
-  localStorage.setItem('currentUser', JSON.stringify(user));
-  return { success: true, user };
 }
 
 // Logout user
 function logout() {
-  localStorage.removeItem('currentUser');
-  // Set flag to show login popup after redirect
-  sessionStorage.setItem('showLoginAfterLogout', '1');
-  // Redirect to index
-  window.location.href = 'index.html';
+  try {
+    localStorage.removeItem('currentUser');
+    // Set flag to show login popup after redirect
+    sessionStorage.setItem('showLoginAfterLogout', '1');
+    // Redirect to index
+    window.location.href = 'index.html';
+  } catch (e) {
+    console.warn('logout: error', e);
+    window.location.href = 'index.html';
+  }
 }
 
 // Get all users
 function getUsers() {
-  const usersData = localStorage.getItem('users');
-  return usersData ? JSON.parse(usersData) : [];
+  try {
+    const usersData = localStorage.getItem('users');
+    return usersData ? JSON.parse(usersData) : [];
+  } catch (e) {
+    console.warn('getUsers: localStorage read error', e);
+    return [];
+  }
 }
 
 // Save all users
 function saveUsers(users) {
-  localStorage.setItem('users', JSON.stringify(users));
+  try {
+    localStorage.setItem('users', JSON.stringify(users));
+  } catch (e) {
+    console.warn('saveUsers: localStorage write error', e);
+  }
 }
 
 // Add points to user
 function addPoints(amount, title) {
-  const user = getCurrentUser();
-  if (!user) return;
-  
-  user.points += amount;
-  user.lifetimePoints += amount;
-  user.pointsHistory.unshift({
-    type: 'earned',
-    amount,
-    title,
-    date: new Date().toISOString().split('T')[0]
-  });
-  
-  // Check for tier upgrade
-  updateTier(user);
-  
-  // Update in users array
-  const users = getUsers();
-  const userIndex = users.findIndex(u => u.id === user.id);
-  if (userIndex !== -1) {
-    users[userIndex] = user;
-    saveUsers(users);
+  try {
+    const user = getCurrentUser();
+    if (!user) return;
+    
+    user.points += amount;
+    user.lifetimePoints += amount;
+    user.pointsHistory.unshift({
+      type: 'earned',
+      amount,
+      title,
+      date: new Date().toISOString().split('T')[0]
+    });
+    
+    // Check for tier upgrade
+    updateTier(user);
+    
+    // Update in users array
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === user.id);
+    if (userIndex !== -1) {
+      users[userIndex] = user;
+      saveUsers(users);
+    }
+    
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  } catch (e) {
+    console.warn('addPoints: error', e);
   }
-  
-  localStorage.setItem('currentUser', JSON.stringify(user));
 }
 
 // Update membership tier based on lifetime points
@@ -149,72 +182,90 @@ function getTierInfo(tier) {
 
 // Get discount for current user
 function getUserDiscount() {
-  const user = getCurrentUser();
-  if (!user) return 0;
-  return getTierInfo(user.tier).discount;
+  try {
+    const user = getCurrentUser();
+    if (!user) return 0;
+    return getTierInfo(user.tier).discount;
+  } catch (e) {
+    console.warn('getUserDiscount: error', e);
+    return 0;
+  }
 }
 
 // Add order to user
 function addOrder(order) {
-  const user = getCurrentUser();
-  if (!user) return;
-  
-  user.orders.unshift(order);
-  
-  // Add points for purchase (1 point per $1)
-  const pointsEarned = Math.floor(order.total);
-  addPoints(pointsEarned, `Purchase: Order ${order.id}`);
-  
-  // Update in users array
-  const users = getUsers();
-  const userIndex = users.findIndex(u => u.id === user.id);
-  if (userIndex !== -1) {
-    users[userIndex] = user;
-    saveUsers(users);
+  try {
+    const user = getCurrentUser();
+    if (!user) return;
+    
+    user.orders.unshift(order);
+    
+    // Add points for purchase (1 point per $1)
+    const pointsEarned = Math.floor(order.total);
+    addPoints(pointsEarned, `Purchase: Order ${order.id}`);
+    
+    // Update in users array
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === user.id);
+    if (userIndex !== -1) {
+      users[userIndex] = user;
+      saveUsers(users);
+    }
+    
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  } catch (e) {
+    console.warn('addOrder: error', e);
   }
-  
-  localStorage.setItem('currentUser', JSON.stringify(user));
 }
 
 // Add to wishlist
 function addToWishlist(item) {
-  const user = getCurrentUser();
-  if (!user) return { success: false, message: 'Please login first' };
-  
-  if (user.wishlist.find(w => w.name === item.name)) {
-    return { success: false, message: 'Item already in wishlist' };
+  try {
+    const user = getCurrentUser();
+    if (!user) return { success: false, message: 'Please login first' };
+    
+    if (user.wishlist.find(w => w.name === item.name)) {
+      return { success: false, message: 'Item already in wishlist' };
+    }
+    
+    user.wishlist.push(item);
+    
+    // Update in users array
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === user.id);
+    if (userIndex !== -1) {
+      users[userIndex] = user;
+      saveUsers(users);
+    }
+    
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    return { success: true };
+  } catch (e) {
+    console.warn('addToWishlist: error', e);
+    return { success: false, message: 'Failed to add to wishlist' };
   }
-  
-  user.wishlist.push(item);
-  
-  // Update in users array
-  const users = getUsers();
-  const userIndex = users.findIndex(u => u.id === user.id);
-  if (userIndex !== -1) {
-    users[userIndex] = user;
-    saveUsers(users);
-  }
-  
-  localStorage.setItem('currentUser', JSON.stringify(user));
-  return { success: true };
 }
 
 // Remove from wishlist
 function removeFromWishlist(itemName) {
-  const user = getCurrentUser();
-  if (!user) return;
-  
-  user.wishlist = user.wishlist.filter(w => w.name !== itemName);
-  
-  // Update in users array
-  const users = getUsers();
-  const userIndex = users.findIndex(u => u.id === user.id);
-  if (userIndex !== -1) {
-    users[userIndex] = user;
-    saveUsers(users);
+  try {
+    const user = getCurrentUser();
+    if (!user) return;
+    
+    user.wishlist = user.wishlist.filter(w => w.name !== itemName);
+    
+    // Update in users array
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === user.id);
+    if (userIndex !== -1) {
+      users[userIndex] = user;
+      saveUsers(users);
+    }
+    
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  } catch (e) {
+    console.warn('removeFromWishlist: error', e);
   }
-  
-  localStorage.setItem('currentUser', JSON.stringify(user));
 }
 
 // Initialize on page load
@@ -222,61 +273,66 @@ document.addEventListener('DOMContentLoaded', initAuth);
 
 // Open auth modal (showRegister = false shows login form, true shows register form)
 function openAuthModal(showRegister) {
-  const modal = document.getElementById('auth-modal');
-  const loginForm = document.getElementById('login-form');
-  const registerForm = document.getElementById('register-form');
+  var modal = document.getElementById('auth-modal');
   if (!modal) return;
+  var loginForm = document.getElementById('login-form');
+  var registerForm = document.getElementById('register-form');
   modal.classList.add('active');
   if (loginForm) loginForm.style.display = showRegister ? 'none' : 'block';
   if (registerForm) registerForm.style.display = showRegister ? 'block' : 'none';
   // Clear fields
-  modal.querySelectorAll('.auth-fields input').forEach(function(i){ i.value = ''; });
-  modal.querySelectorAll('.auth-error,.auth-success').forEach(function(e){ e.classList.remove('show'); });
+  var fields = modal.querySelectorAll('.auth-fields input');
+  for (var i = 0; i < fields.length; i++) { fields[i].value = ''; }
+  var errs = modal.querySelectorAll('.auth-error,.auth-success');
+  for (var j = 0; j < errs.length; j++) { errs[j].classList.remove('show'); }
 }
 
 // Close auth modal
 function closeAuthModal() {
-  const modal = document.getElementById('auth-modal');
+  var modal = document.getElementById('auth-modal');
   if (modal) modal.classList.remove('active');
 }
 
 // Setup auth modal event listeners (call after DOM is ready)
 document.addEventListener('DOMContentLoaded', function() {
-  const modal = document.getElementById('auth-modal');
-  const overlay = document.getElementById('auth-overlay');
-  const closeBtn = document.getElementById('auth-close');
-  const showRegister = document.getElementById('show-register');
-  const showLogin = document.getElementById('show-login');
-  const loginBtn = document.getElementById('login-btn');
-  const registerBtn = document.getElementById('register-btn');
+  var modal = document.getElementById('auth-modal');
+  var overlay = document.getElementById('auth-overlay');
+  var closeBtn = document.getElementById('auth-close');
+  var showRegisterLink = document.getElementById('show-register');
+  var showLoginLink = document.getElementById('show-login');
+  var loginBtn = document.getElementById('login-btn');
+  var registerBtn = document.getElementById('register-btn');
 
   if (overlay) overlay.addEventListener('click', closeAuthModal);
   if (closeBtn) closeBtn.addEventListener('click', closeAuthModal);
-  if (showRegister) showRegister.addEventListener('click', function(e) { e.preventDefault(); openAuthModal(true); });
-  if (showLogin) showLogin.addEventListener('click', function(e) { e.preventDefault(); openAuthModal(false); });
+  if (showRegisterLink) showRegisterLink.addEventListener('click', function(e) { e.preventDefault(); openAuthModal(true); });
+  if (showLoginLink) showLoginLink.addEventListener('click', function(e) { e.preventDefault(); openAuthModal(false); });
 
   // Account nav link click handler
   var accountBtns = document.querySelectorAll('[aria-label="Account"]');
-  accountBtns.forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
+  for (var i = 0; i < accountBtns.length; i++) {
+    accountBtns[i].addEventListener('click', function(e) {
       if (!getCurrentUser()) {
         e.preventDefault();
         openAuthModal(false);
       }
     });
-  });
+  }
 
   // Login form submission
   if (loginBtn) {
     loginBtn.addEventListener('click', function() {
-      var email = document.getElementById('login-email') ? document.getElementById('login-email').value : '';
-      var password = document.getElementById('login-password') ? document.getElementById('login-password').value : '';
+      var emailEl = document.getElementById('login-email');
+      var passwordEl = document.getElementById('login-password');
       var errEl = document.getElementById('login-error');
       var sucEl = document.getElementById('login-success');
+      var email = emailEl ? emailEl.value : '';
+      var password = passwordEl ? passwordEl.value : '';
       if (errEl) errEl.classList.remove('show');
       var result = login(email, password);
       if (result.success) {
         if (sucEl) { sucEl.textContent = 'Login successful!'; sucEl.classList.add('show'); }
+        if (typeof showToast === 'function') showToast('Welcome back, ' + result.user.name + '!');
         setTimeout(function() { location.reload(); }, 800);
       } else {
         if (errEl) { errEl.textContent = result.message; errEl.classList.add('show'); }
@@ -287,11 +343,15 @@ document.addEventListener('DOMContentLoaded', function() {
   // Register form submission
   if (registerBtn) {
     registerBtn.addEventListener('click', function() {
-      var name = document.getElementById('register-name') ? document.getElementById('register-name').value : '';
-      var email = document.getElementById('register-email') ? document.getElementById('register-email').value : '';
-      var password = document.getElementById('register-password') ? document.getElementById('register-password').value : '';
-      var confirm = document.getElementById('register-confirm') ? document.getElementById('register-confirm').value : '';
+      var nameEl = document.getElementById('register-name');
+      var emailEl = document.getElementById('register-email');
+      var passwordEl = document.getElementById('register-password');
+      var confirmEl = document.getElementById('register-confirm');
       var errEl = document.getElementById('register-error');
+      var name = nameEl ? nameEl.value : '';
+      var email = emailEl ? emailEl.value : '';
+      var password = passwordEl ? passwordEl.value : '';
+      var confirm = confirmEl ? confirmEl.value : '';
       if (errEl) errEl.classList.remove('show');
       if (!name || !email || !password) {
         if (errEl) { errEl.textContent = 'Please fill in all fields'; errEl.classList.add('show'); }
@@ -301,8 +361,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (errEl) { errEl.textContent = 'Passwords do not match'; errEl.classList.add('show'); }
         return;
       }
+      if (password.length < 6) {
+        if (errEl) { errEl.textContent = 'Password must be at least 6 characters'; errEl.classList.add('show'); }
+        return;
+      }
       var result = register(name, email, password);
       if (result.success) {
+        if (typeof showToast === 'function') showToast('Welcome to Ounin! You got 100 welcome points!');
         setTimeout(function() { location.reload(); }, 800);
       } else {
         if (errEl) { errEl.textContent = result.message; errEl.classList.add('show'); }

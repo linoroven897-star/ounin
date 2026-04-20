@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -1373,27 +1373,29 @@
     function openAddressModal(index) {
       editingAddressIndex = index >= 0 ? index : -1;
       var modal = document.getElementById('address-modal');
-      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      var user;
+      try { user = JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch(e) { user = null; }
       if (index >= 0 && user && user.addresses && user.addresses[index]) {
         var a = user.addresses[index];
-        document.getElementById('addr-type').value = a.type || 'Home';
-        document.getElementById('addr-name').value = a.name || '';
-        document.getElementById('addr-line1').value = a.line1 || '';
-        document.getElementById('addr-line2').value = a.line2 || '';
-        document.getElementById('addr-city').value = a.city || '';
-        document.getElementById('addr-state').value = a.state || '';
-        document.getElementById('addr-zip').value = a.zip || '';
-        document.getElementById('addr-country').value = a.country || 'United States';
-        document.getElementById('addr-phone').value = a.phone || '';
-        document.getElementById('addr-default').checked = !!a.isDefault;
-        document.getElementById('addr-modal-title').textContent = 'Edit Address';
+        var el;
+        el = document.getElementById('addr-type'); if (el) el.value = a.type || 'Home';
+        el = document.getElementById('addr-name'); if (el) el.value = a.name || '';
+        el = document.getElementById('addr-line1'); if (el) el.value = a.line1 || '';
+        el = document.getElementById('addr-line2'); if (el) el.value = a.line2 || '';
+        el = document.getElementById('addr-city'); if (el) el.value = a.city || '';
+        el = document.getElementById('addr-state'); if (el) el.value = a.state || '';
+        el = document.getElementById('addr-zip'); if (el) el.value = a.zip || '';
+        el = document.getElementById('addr-country'); if (el) el.value = a.country || 'United States';
+        el = document.getElementById('addr-phone'); if (el) el.value = a.phone || '';
+        el = document.getElementById('addr-default'); if (el) el.checked = !!a.isDefault;
+        el = document.getElementById('addr-modal-title'); if (el) el.textContent = 'Edit Address';
       } else {
-        ['addr-type','addr-name','addr-line1','addr-line2','addr-city','addr-state','addr-zip','addr-country','addr-phone'].forEach(function(id) { document.getElementById(id).value = ''; });
-        document.getElementById('addr-country').value = 'United States';
-        document.getElementById('addr-default').checked = false;
-        document.getElementById('addr-modal-title').textContent = 'Add New Address';
+        ['addr-type','addr-name','addr-line1','addr-line2','addr-city','addr-state','addr-zip','addr-country','addr-phone'].forEach(function(id) { var f = document.getElementById(id); if (f) f.value = ''; });
+        el = document.getElementById('addr-country'); if (el) el.value = 'United States';
+        el = document.getElementById('addr-default'); if (el) el.checked = false;
+        el = document.getElementById('addr-modal-title'); if (el) el.textContent = 'Add New Address';
       }
-      modal.classList.add('active');
+      if (modal) modal.classList.add('active');
     }
 
     function closeAddressModal() {

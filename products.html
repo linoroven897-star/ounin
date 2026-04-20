@@ -509,20 +509,16 @@
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
 
-    function openAuthModal(isRegister = false) {
+    function openAuthModal(isRegister) {
+      if (!authModal) return;
       authModal.classList.add('active');
-      if (isRegister) {
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'block';
-      } else {
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-      }
+      if (loginForm) loginForm.style.display = isRegister ? 'none' : 'block';
+      if (registerForm) registerForm.style.display = isRegister ? 'block' : 'none';
       clearAuthForms();
     }
 
     function closeAuthModal() {
-      authModal.classList.remove('active');
+      if (authModal) authModal.classList.remove('active');
     }
 
     function clearAuthForms() {
@@ -545,7 +541,7 @@
       const result = login(email, password);
       if (result.success) {
         if (successEl) { successEl.textContent = 'Login successful! Redirecting...'; successEl.classList.add('show'); }
-        setTimeout(() => { closeAuthModal(); updateAuthUI(); showToast('Welcome back, ' + result.user.name + '!'); if (window.location.pathname.includes('account.html')) location.reload(); }, 500);
+        setTimeout(function() { closeAuthModal(); updateAuthUI(); if (typeof showToast === 'function') showToast('Welcome back, ' + result.user.name + '!'); if (window.location.pathname.includes('account.html')) location.reload(); }, 500);
       } else {
         if (errorEl) { errorEl.textContent = result.message; errorEl.classList.add('show'); }
       }
@@ -562,7 +558,7 @@
       if (password !== confirm) { if (errorEl) { errorEl.textContent = 'Passwords do not match'; errorEl.classList.add('show'); } return; }
       if (password.length < 6) { if (errorEl) { errorEl.textContent = 'Password must be at least 6 characters'; errorEl.classList.add('show'); } return; }
       const result = register(name, email, password);
-      if (result.success) { closeAuthModal(); updateAuthUI(); showToast('Welcome to Ounin! You got 100 welcome points!'); } else { if (errorEl) { errorEl.textContent = result.message; errorEl.classList.add('show'); } }
+      if (result.success) { closeAuthModal(); updateAuthUI(); if (typeof showToast === 'function') showToast('Welcome to Ounin! You got 100 welcome points!'); } else { if (errorEl) { errorEl.textContent = result.message; errorEl.classList.add('show'); } }
     });
 
     const accountBtn = document.querySelector('a[aria-label="Account"]');
