@@ -1221,3 +1221,79 @@
     </div>
   </footer>
 
+  <!-- CART DRAWER -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3 class="cart-drawer-title">Your Cart (<span id="cart-item-count">0</span>)</h3>
+      <button class="cart-drawer-close" id="cart-close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer-content" id="cart-content">
+      <div class="cart-empty" id="cart-empty">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <p>Your cart is empty</p>
+        <a href="products.html" class="btn btn-primary">Start Shopping</a>
+      </div>
+      <div class="cart-items" id="cart-items"></div>
+    </div>
+    <div class="cart-drawer-footer" id="cart-footer">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">$0</span>
+      </div>
+      <p class="cart-shipping-note">Shipping & taxes calculated at checkout</p>
+      <button class="btn btn-primary btn-checkout" id="checkout-btn">Checkout</button>
+      <a href="products.html" class="cart-continue">Continue Shopping</a>
+    </div>
+  </div>
+
+  <!-- QUICK VIEW MODAL -->
+  <div class="modal" id="quick-view-modal">
+    <div class="modal-overlay" id="quick-view-overlay"></div>
+    <div class="modal-content quick-view-content">
+      <button class="modal-close" id="quick-view-close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="quick-view-grid" id="quick-view-content"></div>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-modal" id="auth-modal">
+    <div class="auth-modal-overlay" id="auth-overlay"></div>
+    <div class="auth-modal-content">
+      <button class="auth-modal-close" id="auth-close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="auth-form" id="login-form">
+        <div class="auth-header"><h2 class="auth-title">Welcome Back</h2><p class="auth-subtitle">Sign in to your Ounin account</p></div>
+        <div class="auth-fields">
+          <div class="auth-error" id="login-error"></div>
+          <div class="auth-success" id="login-success"></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="login-email" placeholder="your@email.com"></div>
+          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="login-password" placeholder="Enter your password"></div>
+          <button class="auth-submit-btn" id="login-btn">Sign In</button>
+          <p class="auth-switch">Don't have an account? <a href="#" id="show-register">Create one</a></p>
+        </div>
+      </div>
+      <div class="auth-form" id="register-form" style="display:none;">
+        <div class="auth-header"><h2 class="auth-title">Create Account</h2><p class="auth-subtitle">Join the Ounin family</p></div>
+        <div class="auth-fields">
+          <div class="auth-error" id="register-error"></div>
+          <div class="auth-success" id="register-success"></div>
+          <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="register-name" placeholder="John Doe"></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="register-email" placeholder="your@email.com"></div>
+          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="register-password" placeholder="Create a password"></div>
+          <button class="auth-submit-btn" id="register-btn">Create Account</button>
+          <p class="auth-switch">Already have an account? <a href="#" id="show-login">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/auth.js"></script>
+</body>
+</html>
+
