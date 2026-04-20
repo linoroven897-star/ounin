@@ -1294,6 +1294,22 @@
 
   <script src="assets/js/main.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script>
+    // Auto-open auth modal for non-logged-in users on account page
+    document.addEventListener('DOMContentLoaded', function() {
+      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (!user) {
+        var modal = document.getElementById('auth-modal');
+        var loginForm = document.getElementById('login-form');
+        var registerForm = document.getElementById('register-form');
+        if (modal) {
+          modal.classList.add('active');
+          if (loginForm) loginForm.style.display = 'block';
+          if (registerForm) registerForm.style.display = 'none';
+        }
+      }
+    });
+  </script>
 </body>
 </html>
 
