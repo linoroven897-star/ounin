@@ -1465,22 +1465,85 @@
       if (user && accountContent) {
         // Logged in - show account content
         accountContent.style.display = 'block';
-        document.getElementById('user-name').textContent = user.name;
-        document.getElementById('user-email').textContent = user.email;
-        document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
+        var nameEl = document.getElementById('user-name');
+        var emailEl = document.getElementById('user-email');
+        var avatarEl = document.getElementById('user-avatar');
+        if (nameEl) nameEl.textContent = user.name;
+        if (emailEl) emailEl.textContent = user.email;
+        if (avatarEl) avatarEl.textContent = (user.name || 'U').charAt(0).toUpperCase();
         var tierInfo = { bronze:{name:'Bronze Member'}, silver:{name:'Silver Member'}, gold:{name:'Gold Member'}, platinum:{name:'Platinum Member'} };
-        document.getElementById('membership-tier').textContent = (tierInfo[user.tier] || tierInfo.bronze).name;
+        var tierNameEl = document.getElementById('membership-tier');
+        if (tierNameEl) tierNameEl.textContent = (tierInfo[user.tier] || tierInfo.bronze).name;
         var badge = document.getElementById('membership-badge');
-        badge.className = 'membership-badge tier-' + (user.tier || 'bronze');
-        document.getElementById('profile-name').value = user.name || '';
-        document.getElementById('profile-email').value = user.email || '';
-        document.getElementById('profile-phone').value = user.phone || '';
-        document.getElementById('profile-birthday').value = user.birthday || '';
+        if (badge) badge.className = 'membership-badge tier-' + (user.tier || 'bronze');
+        var nameParts = (user.name || '').split(' ');
+        var fnEl = document.getElementById('profile-firstname');
+        var lnEl = document.getElementById('profile-lastname');
+        if (fnEl) fnEl.value = nameParts[0] || '';
+        if (lnEl) lnEl.value = nameParts.slice(1).join(' ') || '';
+        var emailEl = document.getElementById('profile-email');
+        if (emailEl) emailEl.value = user.email || '';
+        var phoneEl = document.getElementById('profile-phone');
+        if (phoneEl) phoneEl.value = user.phone || '';
+        var bdayEl = document.getElementById('profile-birthday');
+        if (bdayEl) bdayEl.value = user.birthday || '';
         document.getElementById('points-balance').textContent = (user.points || 0).toLocaleString();
-        document.getElementById('lifetime-points').textContent = (user.lifetimePoints || 0).toLocaleString();
+        var ltEl = document.getElementById('lifetime-points') || document.getElementById('points-earned');
+        if (ltEl) ltEl.textContent = (user.lifetimePoints || 0).toLocaleString();
         document.getElementById('orders-count').textContent = (user.orders && user.orders.length) || 0;
         document.getElementById('wishlist-count').textContent = (user.wishlist && user.wishlist.length) || 0;
         renderAddresses(user.addresses || []);
+
+        // Orders
+        var ordersList = document.getElementById('orders-list');
+        if (ordersList) {
+          if (!user.orders || user.orders.length === 0) {
+            ordersList.innerHTML = '<div style="text-align:center;padding:40px;color:#999;"><p>No orders yet.</p><a href="products.html" class="btn btn-primary" style="display:inline-block;margin-top:16px;">Start Shopping</a></div>';
+          } else {
+            var ordersHtml = '';
+            user.orders.forEach(function(order) {
+              ordersHtml += '<div class="order-card" style="background:#fff;border:1px solid #eee;border-radius:12px;padding:20px;margin-bottom:16px;">';
+              ordersHtml += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">';
+              ordersHtml += '<span style="font-weight:600;">Order #' + order.id + '</span>';
+              ordersHtml += '<span style="color:#666;">' + (order.date || '') + '</span></div>';
+              ordersHtml += '<div style="color:#666;font-size:14px;">' + (order.items || '') + ' &bull; $' + (order.total || 0) + '</div>';
+              ordersHtml += '</div>';
+            });
+            ordersList.innerHTML = ordersHtml;
+          }
+        }
+
+        var wishlistList = document.getElementById('wishlist-items');
+        if (wishlistList) {
+          if (!user.wishlist || user.wishlist.length === 0) {
+            wishlistList.innerHTML = '<div style="text-align:center;padding:40px;color:#999;"><p>Your wishlist is empty.</p><a href="products.html" class="btn btn-primary" style="display:inline-block;margin-top:16px;">Browse Products</a></div>';
+          } else {
+            var wishlistHtml = '<div class="wishlist-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;">';
+            user.wishlist.forEach(function(item) {
+              wishlistHtml += '<div class="product-card" style="background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;">';
+              wishlistHtml += '<img src="' + (item.image || 'assets/images/placeholder.jpg') + '" alt="' + (item.name || '') + '" style="width:100%;height:180px;object-fit:cover;">';
+              wishlistHtml += '<div style="padding:16px;">';
+              wishlistHtml += '<h3 style="font-size:14px;margin:0 0 8px;">' + (item.name || '') + '</h3>';
+              wishlistHtml += '<p style="color:#666;font-size:14px;margin:0 0 12px;">$' + (item.price || 0) + '</p>';
+              wishlistHtml += '<button class="btn btn-outline" onclick="removeFromWishlist(\'' + (item.name || '').replace(/'/g, "\\'") + '\');location.reload();" style="width:100%;padding:8px;font-size:13px;">Remove</button>';
+              wishlistHtml += '</div></div>';
+            });
+            wishlistList.innerHTML = wishlistHtml + '</div>';
+          }
+        }
+
+        var pointsHistory = document.getElementById('points-history');
+        if (pointsHistory && user.pointsHistory) {
+          var historyHtml = '';
+          user.pointsHistory.forEach(function(h) {
+            historyHtml += '<div class="points-history-item" style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee;">';
+            historyHtml += '<div><div style="font-size:14px;">' + (h.title || '') + '</div><div style="font-size:12px;color:#999;">' + (h.date || '') + '</div></div>';
+            historyHtml += '<div style="color:' + (h.type === 'earned' ? 'green' : '#c00') + ';font-weight:600;">' + (h.type === 'earned' ? '+' : '-') + (h.amount || 0) + '</div></div>';
+          });
+          pointsHistory.innerHTML = historyHtml || '<p style="color:#999;text-align:center;padding:20px;">No points history yet.</p>';
+        } else if (pointsHistory) {
+          pointsHistory.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">No points history yet.</p>';
+        }
 
         // Render orders panel
         var ordersList = document.getElementById('orders-list');
