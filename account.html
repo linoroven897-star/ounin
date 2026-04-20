@@ -1330,12 +1330,16 @@
     var editingAddressIndex = -1;
 
     function showInlineLogin() {
-      document.getElementById('inline-login-form').style.display = 'block';
-      document.getElementById('inline-register-form').style.display = 'none';
+      var lf = document.getElementById('inline-login-form');
+      var rf = document.getElementById('inline-register-form');
+      if (lf) lf.style.display = 'block';
+      if (rf) rf.style.display = 'none';
     }
     function showInlineRegister() {
-      document.getElementById('inline-login-form').style.display = 'none';
-      document.getElementById('inline-register-form').style.display = 'block';
+      var lf = document.getElementById('inline-login-form');
+      var rf = document.getElementById('inline-register-form');
+      if (lf) lf.style.display = 'none';
+      if (rf) rf.style.display = 'block';
     }
 
     function renderAddresses(addresses) {
@@ -1477,6 +1481,94 @@
         document.getElementById('orders-count').textContent = (user.orders && user.orders.length) || 0;
         document.getElementById('wishlist-count').textContent = (user.wishlist && user.wishlist.length) || 0;
         renderAddresses(user.addresses || []);
+
+        // Render orders panel
+        var ordersList = document.getElementById('orders-list');
+        if (ordersList) {
+          if (!user.orders || user.orders.length === 0) {
+            ordersList.innerHTML = '<div style="text-align:center;padding:40px;color:#999;"><p>No orders yet.</p><a href="products.html" class="btn btn-primary" style="display:inline-block;margin-top:16px;">Start Shopping</a></div>';
+          } else {
+            var ordersHtml = '';
+            user.orders.forEach(function(order) {
+              ordersHtml += '<div class="order-card" style="background:#fff;border:1px solid #eee;border-radius:12px;padding:20px;margin-bottom:16px;">';
+              ordersHtml += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">';
+              ordersHtml += '<span style="font-weight:600;">Order #' + order.id + '</span>';
+              ordersHtml += '<span style="color:#666;">' + order.date + '</span></div>';
+              ordersHtml += '<div style="color:#666;font-size:14px;">' + order.items + ' &bull; $' + order.total + '</div>';
+              ordersHtml += '</div>';
+            });
+            ordersList.innerHTML = ordersHtml;
+          }
+        }
+
+        // Render wishlist panel
+        var wishlistList = document.getElementById('wishlist-items');
+        if (wishlistList) {
+          if (!user.wishlist || user.wishlist.length === 0) {
+            wishlistList.innerHTML = '<div style="text-align:center;padding:40px;color:#999;"><p>Your wishlist is empty.</p><a href="products.html" class="btn btn-primary" style="display:inline-block;margin-top:16px;">Browse Products</a></div>';
+          } else {
+            var wishlistHtml = '<div class="wishlist-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;">';
+            user.wishlist.forEach(function(item) {
+              wishlistHtml += '<div class="product-card" style="background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;">';
+              wishlistHtml += '<img src="' + (item.image || 'assets/images/placeholder.jpg') + '" alt="' + item.name + '" style="width:100%;height:180px;object-fit:cover;">';
+              wishlistHtml += '<div style="padding:16px;">';
+              wishlistHtml += '<h3 style="font-size:14px;margin:0 0 8px;">' + item.name + '</h3>';
+              wishlistHtml += '<p style="color:#666;font-size:14px;margin:0 0 12px;">$' + (item.price || 0) + '</p>';
+              wishlistHtml += '<button class="btn btn-outline" onclick="removeFromWishlist(\'' + item.name + '\');location.reload();" style="width:100%;padding:8px;font-size:13px;">Remove</button>';
+              wishlistHtml += '</div></div>';
+            });
+            wishlistList.innerHTML = wishlistHtml + '</div>';
+          }
+        }
+
+        // Render points history
+        var pointsHistory = document.getElementById('points-history');
+        if (pointsHistory && user.pointsHistory) {
+          var historyHtml = '';
+          user.pointsHistory.forEach(function(h) {
+            historyHtml += '<div class="points-history-item" style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee;">';
+            historyHtml += '<div><div style="font-size:14px;">' + h.title + '</div><div style="font-size:12px;color:#999;">' + h.date + '</div></div>';
+            historyHtml += '<div style="color:' + (h.type === 'earned' ? 'green' : '#c00') + ';font-weight:600;">' + (h.type === 'earned' ? '+' : '-') + h.amount + '</div></div>';
+          });
+          pointsHistory.innerHTML = historyHtml || '<p style="color:#999;text-align:center;padding:20px;">No points history yet.</p>';
+        }
+
+        // Update tier progress
+        var lifetime = user.lifetimePoints || 0;
+        var tier = user.tier || 'bronze';
+        var tiers = {
+          bronze: { name: 'Bronze', min: 0, max: 1500 },
+          silver: { name: 'Silver', min: 1500, max: 3750 },
+          gold: { name: 'Gold', min: 3750, max: 7500 },
+          platinum: { name: 'Platinum', min: 7500, max: null }
+        };
+        var currentTier = tiers[tier] || tiers.bronze;
+        var progressPercent = 100;
+        var nextTierText = 'Max tier reached!';
+        if (currentTier.max) {
+          var range = currentTier.max - currentTier.min;
+          var progress = Math.min(100, Math.max(0, ((lifetime - currentTier.min) / range) * 100));
+          progressPercent = progress;
+          nextTierText = (currentTier.max - lifetime) + ' points to next tier';
+        }
+        var tierTextEl = document.getElementById('tier-text');
+        var tierFillEl = document.getElementById('tier-fill');
+        var tierProgressEl = document.getElementById('tier-progress-text');
+        if (tierTextEl) tierTextEl.textContent = nextTierText;
+        if (tierFillEl) tierFillEl.style.width = progressPercent + '%';
+        if (tierProgressEl) tierProgressEl.textContent = lifetime.toLocaleString() + ' lifetime points';
+
+        // Tab switching
+        document.querySelectorAll('.account-tab').forEach(function(tab) {
+          tab.addEventListener('click', function() {
+            var target = this.getAttribute('data-tab');
+            document.querySelectorAll('.account-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.account-panel').forEach(function(p) { p.style.display = 'none'; });
+            this.classList.add('active');
+            var panel = document.getElementById('panel-' + target);
+            if (panel) panel.style.display = 'block';
+          });
+        });
       } else {
         // Show inline auth form
         if (authSection) {
