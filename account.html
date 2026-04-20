@@ -1092,24 +1092,16 @@
           <div>
             <div class="benefits-card">
               <h4 class="benefits-title">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                Saved Addresses
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                My Addresses
               </h4>
-              <div class="address-card default">
-                <span class="address-badge">Default</span>
-                <div class="address-type">Home</div>
-                <div class="address-name">John Smith</div>
-                <div class="address-text">
-                  123 Main Street<br>
-                  Apt 4B<br>
-                  New York, NY 10001<br>
-                  United States
-                </div>
-                <div class="address-actions">
-                  <button class="address-btn">Edit</button>
-                  <button class="address-btn">Delete</button>
-                </div>
+              <div id="address-list">
+                <!-- Addresses rendered dynamically -->
               </div>
+              <button class="btn btn-outline" id="add-address-btn" style="margin-top:16px; width:100%;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16" style="margin-right:6px; vertical-align:middle;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Add New Address
+              </button>
             </div>
             <div class="benefits-card" style="margin-top: 20px;">
               <h4 class="benefits-title">
@@ -1285,8 +1277,46 @@
           <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="register-name" placeholder="John Doe"></div>
           <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="register-email" placeholder="your@email.com"></div>
           <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="register-password" placeholder="Create a password"></div>
+          <div class="form-group"><label class="form-label">Confirm Password</label><input type="password" class="form-input" id="register-confirm" placeholder="Confirm your password"></div>
           <button class="auth-submit-btn" id="register-btn">Create Account</button>
           <p class="auth-switch">Already have an account? <a href="#" id="show-login">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADDRESS MODAL -->
+  <div class="auth-modal" id="address-modal">
+    <div class="auth-modal-overlay" id="addr-overlay"></div>
+    <div class="auth-modal-content">
+      <button class="auth-modal-close" id="addr-close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="auth-form" style="display:block;">
+        <div class="auth-header">
+          <h2 class="auth-title" id="addr-modal-title">Add New Address</h2>
+        </div>
+        <div class="auth-fields">
+          <div class="form-group"><label class="form-label">Address Type</label>
+            <select class="form-input" id="addr-type" style="background:white;">
+              <option value="Home">Home</option>
+              <option value="Office">Office</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Full Name *</label><input type="text" class="form-input" id="addr-name" placeholder="John Smith"></div>
+          <div class="form-group"><label class="form-label">Address Line 1 *</label><input type="text" class="form-input" id="addr-line1" placeholder="123 Main Street"></div>
+          <div class="form-group"><label class="form-label">Address Line 2</label><input type="text" class="form-input" id="addr-line2" placeholder="Apt 4B"></div>
+          <div class="form-group"><label class="form-label">City *</label><input type="text" class="form-input" id="addr-city" placeholder="New York"></div>
+          <div class="form-group"><label class="form-label">State / Province *</label><input type="text" class="form-input" id="addr-state" placeholder="NY"></div>
+          <div class="form-group"><label class="form-label">ZIP / Postal Code *</label><input type="text" class="form-input" id="addr-zip" placeholder="10001"></div>
+          <div class="form-group"><label class="form-label">Country</label><input type="text" class="form-input" id="addr-country" value="United States"></div>
+          <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="addr-phone" placeholder="+1 (555) 123-4567"></div>
+          <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" id="addr-default" style="width:auto;">
+            <label for="addr-default" style="font-size:13px;margin:0;">Set as default address</label>
+          </div>
+          <button class="auth-submit-btn" onclick="saveAddress()">Save Address</button>
         </div>
       </div>
     </div>
@@ -1295,20 +1325,204 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/auth.js"></script>
   <script>
-    // Auto-open auth modal for non-logged-in users on account page
+    // Account page initialization
     document.addEventListener('DOMContentLoaded', function() {
       var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-      if (!user) {
-        var modal = document.getElementById('auth-modal');
-        var loginForm = document.getElementById('login-form');
-        var registerForm = document.getElementById('register-form');
-        if (modal) {
-          modal.classList.add('active');
+      var accountContent = document.getElementById('account-content');
+      var authModal = document.getElementById('auth-modal');
+      var loginForm = document.getElementById('login-form');
+      var registerForm = document.getElementById('register-form');
+
+      if (user && accountContent) {
+        // Logged in - show account content and populate data
+        accountContent.style.display = 'block';
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-email').textContent = user.email;
+        document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
+        document.getElementById('membership-tier').textContent = getTierInfo(user.tier).name;
+        var badge = document.getElementById('membership-badge');
+        badge.className = 'membership-badge tier-' + user.tier;
+        document.getElementById('profile-name').value = user.name || '';
+        document.getElementById('profile-email').value = user.email || '';
+        document.getElementById('profile-phone').value = user.phone || '';
+        document.getElementById('profile-birthday').value = user.birthday || '';
+        document.getElementById('points-balance').textContent = (user.points || 0).toLocaleString();
+        document.getElementById('lifetime-points').textContent = (user.lifetimePoints || 0).toLocaleString();
+        document.getElementById('orders-count').textContent = user.orders ? user.orders.length : 0;
+        document.getElementById('wishlist-count').textContent = user.wishlist ? user.wishlist.length : 0;
+        renderAddresses(user.addresses || []);
+        if (authModal) authModal.classList.remove('active');
+      } else {
+        if (authModal) {
+          authModal.classList.add('active');
           if (loginForm) loginForm.style.display = 'block';
           if (registerForm) registerForm.style.display = 'none';
         }
       }
+
+      var logoutBtn = document.getElementById('logout-btn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          logout();
+        });
+      }
+
+      // Add address button
+      var addAddrBtn = document.getElementById('add-address-btn');
+      if (addAddrBtn) {
+        addAddrBtn.addEventListener('click', function() {
+          openAddressModal();
+        });
+      }
+
+      // Address modal handlers
+      var addrModal = document.getElementById('address-modal');
+      var addrOverlay = document.getElementById('addr-overlay');
+      var addrClose = document.getElementById('addr-close');
+      if (addrOverlay) addrOverlay.addEventListener('click', closeAddressModal);
+      if (addrClose) addrClose.addEventListener('click', closeAddressModal);
     });
+
+    var editingAddressIndex = -1;
+
+    function openAddressModal(index) {
+      var modal = document.getElementById('address-modal');
+      if (!modal) return;
+      editingAddressIndex = index;
+      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (index >= 0 && user && user.addresses && user.addresses[index]) {
+        var addr = user.addresses[index];
+        document.getElementById('addr-type').value = addr.type || 'Home';
+        document.getElementById('addr-name').value = addr.name || '';
+        document.getElementById('addr-line1').value = addr.line1 || '';
+        document.getElementById('addr-line2').value = addr.line2 || '';
+        document.getElementById('addr-city').value = addr.city || '';
+        document.getElementById('addr-state').value = addr.state || '';
+        document.getElementById('addr-zip').value = addr.zip || '';
+        document.getElementById('addr-country').value = addr.country || 'United States';
+        document.getElementById('addr-phone').value = addr.phone || '';
+        document.getElementById('addr-default').checked = addr.isDefault || false;
+        document.getElementById('addr-modal-title').textContent = 'Edit Address';
+      } else {
+        document.getElementById('addr-type').value = 'Home';
+        document.getElementById('addr-name').value = '';
+        document.getElementById('addr-line1').value = '';
+        document.getElementById('addr-line2').value = '';
+        document.getElementById('addr-city').value = '';
+        document.getElementById('addr-state').value = '';
+        document.getElementById('addr-zip').value = '';
+        document.getElementById('addr-country').value = 'United States';
+        document.getElementById('addr-phone').value = '';
+        document.getElementById('addr-default').checked = false;
+        document.getElementById('addr-modal-title').textContent = 'Add New Address';
+      }
+      modal.classList.add('active');
+    }
+
+    function closeAddressModal() {
+      var modal = document.getElementById('address-modal');
+      if (modal) modal.classList.remove('active');
+      editingAddressIndex = -1;
+    }
+
+    function saveAddress() {
+      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (!user) return;
+      if (!user.addresses) user.addresses = [];
+
+      var newAddr = {
+        type: document.getElementById('addr-type').value,
+        name: document.getElementById('addr-name').value,
+        line1: document.getElementById('addr-line1').value,
+        line2: document.getElementById('addr-line2').value,
+        city: document.getElementById('addr-city').value,
+        state: document.getElementById('addr-state').value,
+        zip: document.getElementById('addr-zip').value,
+        country: document.getElementById('addr-country').value,
+        phone: document.getElementById('addr-phone').value,
+        isDefault: document.getElementById('addr-default').checked
+      };
+
+      if (!newAddr.name || !newAddr.line1 || !newAddr.city || !newAddr.zip) {
+        alert('Please fill in required fields');
+        return;
+      }
+
+      if (editingAddressIndex >= 0) {
+        user.addresses[editingAddressIndex] = newAddr;
+      } else {
+        user.addresses.push(newAddr);
+      }
+
+      // If set as default, unset others
+      if (newAddr.isDefault) {
+        user.addresses.forEach(function(a, i) {
+          if (i !== editingAddressIndex) a.isDefault = false;
+        });
+      }
+
+      // Update users array
+      var users = JSON.parse(localStorage.getItem('users') || '[]');
+      var userIndex = users.findIndex(function(u) { return u.id === user.id; });
+      if (userIndex !== -1) users[userIndex] = user;
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify(user));
+
+      closeAddressModal();
+      renderAddresses(user.addresses);
+    }
+
+    function deleteAddress(index) {
+      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (!user || !user.addresses) return;
+      user.addresses.splice(index, 1);
+      var users = JSON.parse(localStorage.getItem('users') || '[]');
+      var userIndex = users.findIndex(function(u) { return u.id === user.id; });
+      if (userIndex !== -1) users[userIndex] = user;
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      renderAddresses(user.addresses);
+    }
+
+    function renderAddresses(addresses) {
+      var container = document.getElementById('address-list');
+      if (!container) return;
+      if (!addresses || addresses.length === 0) {
+        container.innerHTML = '<p style="color:#999; font-size:14px;">No saved addresses. Add one below.</p>';
+        return;
+      }
+      var html = '';
+      addresses.forEach(function(addr, i) {
+        html += '<div class="address-card' + (addr.isDefault ? ' default' : '') + '" style="margin-bottom:12px;">';
+        if (addr.isDefault) html += '<span class="address-badge">Default</span>';
+        html += '<div class="address-type">' + addr.type + '</div>';
+        html += '<div class="address-name">' + addr.name + '</div>';
+        html += '<div class="address-text">';
+        html += addr.line1 + (addr.line2 ? '<br>' + addr.line2 : '') + '<br>';
+        html += addr.city + ', ' + addr.state + ' ' + addr.zip + '<br>';
+        html += addr.country;
+        if (addr.phone) html += '<br>' + addr.phone;
+        html += '</div>';
+        html += '<div class="address-actions">';
+        html += '<button class="address-btn" onclick="openAddressModal(' + i + ')">Edit</button>';
+        html += '<button class="address-btn" onclick="deleteAddress(' + i + ')">Delete</button>';
+        if (!addr.isDefault) html += '<button class="address-btn" onclick="setDefaultAddress(' + i + ')">Set Default</button>';
+        html += '</div></div>';
+      });
+      container.innerHTML = html;
+    }
+
+    function setDefaultAddress(index) {
+      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (!user || !user.addresses) return;
+      user.addresses.forEach(function(a, i) { a.isDefault = (i === index); });
+      var users = JSON.parse(localStorage.getItem('users') || '[]');
+      var userIndex = users.findIndex(function(u) { return u.id === user.id; });
+      if (userIndex !== -1) users[userIndex] = user;
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      renderAddresses(user.addresses);
+    }
   </script>
 </body>
 </html>
