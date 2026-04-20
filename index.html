@@ -141,6 +141,7 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-video-bg">
+      <div class="hero-poster" id="hero-poster"></div>
       <video autoplay muted loop playsinline webkit-playsinline preload="auto" class="hero-video-desktop video-ready" id="hero-video">
         <source src="assets/videos/hero-video.mp4" type="video/mp4">
       </video>
@@ -1137,6 +1138,7 @@
     // Ensure hero video plays smoothly without stutter
     (function() {
       var video = document.getElementById('hero-video');
+      var poster = document.getElementById('hero-poster');
       if (!video) return;
       // Wait for video to be ready before playing
       video.addEventListener('canplay', function() {
@@ -1144,6 +1146,10 @@
       });
       video.addEventListener('playing', function() {
         video.classList.add('video-playing');
+        // Fade out poster when video starts playing
+        if (poster) {
+          poster.classList.add('hidden');
+        }
       });
       // Force play in case autoplay was blocked
       video.load();
