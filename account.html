@@ -1251,35 +1251,37 @@
     </div>
   </div>
 
-  <!-- AUTH MODAL -->
-  <div class="auth-modal" id="auth-modal">
-    <div class="auth-modal-overlay" id="auth-overlay"></div>
-    <div class="auth-modal-content">
-      <button class="auth-modal-close" id="auth-close">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-      <div class="auth-form" id="login-form">
-        <div class="auth-header"><h2 class="auth-title">Welcome Back</h2><p class="auth-subtitle">Sign in to your Ounin account</p></div>
+  <!-- AUTH SECTION (inline, not modal) -->
+  <div class="auth-section" id="auth-section" style="display:none;">
+    <div class="container" style="max-width:480px; padding: 60px 0;">
+      <div class="auth-form" id="inline-login-form">
+        <div class="auth-header">
+          <h2 class="auth-title" style="font-size:28px; margin-bottom:8px;">Welcome Back</h2>
+          <p class="auth-subtitle" style="color:#666; margin-bottom:32px;">Sign in to your Ounin account</p>
+        </div>
         <div class="auth-fields">
-          <div class="auth-error" id="login-error"></div>
-          <div class="auth-success" id="login-success"></div>
-          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="login-email" placeholder="your@email.com"></div>
-          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="login-password" placeholder="Enter your password"></div>
-          <button class="auth-submit-btn" id="login-btn">Sign In</button>
-          <p class="auth-switch">Don't have an account? <a href="#" id="show-register">Create one</a></p>
+          <div class="auth-error" id="login-error" style="display:none; color:#c00; margin-bottom:12px;"></div>
+          <div class="auth-success" id="login-success" style="display:none; color:green; margin-bottom:12px;"></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="login-email" placeholder="your@email.com" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:15px;"></div>
+          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="login-password" placeholder="Enter your password" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:15px;"></div>
+          <button class="auth-submit-btn" id="login-btn" style="width:100%;padding:14px;background:#1a1a1a;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;margin-top:8px;">Sign In</button>
+          <p style="text-align:center;margin-top:20px;color:#666;">Don't have an account? <a href="#" id="show-register" style="color:#1a1a1a;font-weight:600;">Create one</a></p>
         </div>
       </div>
-      <div class="auth-form" id="register-form" style="display:none;">
-        <div class="auth-header"><h2 class="auth-title">Create Account</h2><p class="auth-subtitle">Join the Ounin family</p></div>
+      <div class="auth-form" id="inline-register-form" style="display:none;">
+        <div class="auth-header">
+          <h2 class="auth-title" style="font-size:28px; margin-bottom:8px;">Create Account</h2>
+          <p class="auth-subtitle" style="color:#666; margin-bottom:32px;">Join the Ounin family</p>
+        </div>
         <div class="auth-fields">
-          <div class="auth-error" id="register-error"></div>
-          <div class="auth-success" id="register-success"></div>
-          <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="register-name" placeholder="John Doe"></div>
-          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="register-email" placeholder="your@email.com"></div>
-          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="register-password" placeholder="Create a password"></div>
-          <div class="form-group"><label class="form-label">Confirm Password</label><input type="password" class="form-input" id="register-confirm" placeholder="Confirm your password"></div>
-          <button class="auth-submit-btn" id="register-btn">Create Account</button>
-          <p class="auth-switch">Already have an account? <a href="#" id="show-login">Sign in</a></p>
+          <div class="auth-error" id="register-error" style="display:none; color:#c00; margin-bottom:12px;"></div>
+          <div class="auth-success" id="register-success" style="display:none; color:green; margin-bottom:12px;"></div>
+          <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="register-name" placeholder="John Doe" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:15px;"></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="register-email" placeholder="your@email.com" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:15px;"></div>
+          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="register-password" placeholder="Create a password" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:15px;"></div>
+          <div class="form-group"><label class="form-label">Confirm Password</label><input type="password" class="form-input" id="register-confirm" placeholder="Confirm your password" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:15px;"></div>
+          <button class="auth-submit-btn" id="register-btn" style="width:100%;padding:14px;background:#1a1a1a;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;margin-top:8px;">Create Account</button>
+          <p style="text-align:center;margin-top:20px;color:#666;">Already have an account? <a href="#" id="show-login" style="color:#1a1a1a;font-weight:600;">Sign in</a></p>
         </div>
       </div>
     </div>
@@ -1325,175 +1327,27 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/auth.js"></script>
   <script>
-    // Account page initialization
-    document.addEventListener('DOMContentLoaded', function() {
-      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-      var accountContent = document.getElementById('account-content');
-      var authModal = document.getElementById('auth-modal');
-      var loginForm = document.getElementById('login-form');
-      var registerForm = document.getElementById('register-form');
-
-      if (user && accountContent) {
-        // Logged in - show account content and populate data
-        accountContent.style.display = 'block';
-        document.getElementById('user-name').textContent = user.name;
-        document.getElementById('user-email').textContent = user.email;
-        document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
-        document.getElementById('membership-tier').textContent = getTierInfo(user.tier).name;
-        var badge = document.getElementById('membership-badge');
-        badge.className = 'membership-badge tier-' + user.tier;
-        document.getElementById('profile-name').value = user.name || '';
-        document.getElementById('profile-email').value = user.email || '';
-        document.getElementById('profile-phone').value = user.phone || '';
-        document.getElementById('profile-birthday').value = user.birthday || '';
-        document.getElementById('points-balance').textContent = (user.points || 0).toLocaleString();
-        document.getElementById('lifetime-points').textContent = (user.lifetimePoints || 0).toLocaleString();
-        document.getElementById('orders-count').textContent = user.orders ? user.orders.length : 0;
-        document.getElementById('wishlist-count').textContent = user.wishlist ? user.wishlist.length : 0;
-        renderAddresses(user.addresses || []);
-        if (authModal) authModal.classList.remove('active');
-      } else {
-        if (authModal) {
-          authModal.classList.add('active');
-          if (loginForm) loginForm.style.display = 'block';
-          if (registerForm) registerForm.style.display = 'none';
-        }
-      }
-
-      var logoutBtn = document.getElementById('logout-btn');
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-          logout();
-        });
-      }
-
-      // Add address button
-      var addAddrBtn = document.getElementById('add-address-btn');
-      if (addAddrBtn) {
-        addAddrBtn.addEventListener('click', function() {
-          openAddressModal();
-        });
-      }
-
-      // Address modal handlers
-      var addrModal = document.getElementById('address-modal');
-      var addrOverlay = document.getElementById('addr-overlay');
-      var addrClose = document.getElementById('addr-close');
-      if (addrOverlay) addrOverlay.addEventListener('click', closeAddressModal);
-      if (addrClose) addrClose.addEventListener('click', closeAddressModal);
-    });
-
     var editingAddressIndex = -1;
 
-    function openAddressModal(index) {
-      var modal = document.getElementById('address-modal');
-      if (!modal) return;
-      editingAddressIndex = index;
-      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-      if (index >= 0 && user && user.addresses && user.addresses[index]) {
-        var addr = user.addresses[index];
-        document.getElementById('addr-type').value = addr.type || 'Home';
-        document.getElementById('addr-name').value = addr.name || '';
-        document.getElementById('addr-line1').value = addr.line1 || '';
-        document.getElementById('addr-line2').value = addr.line2 || '';
-        document.getElementById('addr-city').value = addr.city || '';
-        document.getElementById('addr-state').value = addr.state || '';
-        document.getElementById('addr-zip').value = addr.zip || '';
-        document.getElementById('addr-country').value = addr.country || 'United States';
-        document.getElementById('addr-phone').value = addr.phone || '';
-        document.getElementById('addr-default').checked = addr.isDefault || false;
-        document.getElementById('addr-modal-title').textContent = 'Edit Address';
-      } else {
-        document.getElementById('addr-type').value = 'Home';
-        document.getElementById('addr-name').value = '';
-        document.getElementById('addr-line1').value = '';
-        document.getElementById('addr-line2').value = '';
-        document.getElementById('addr-city').value = '';
-        document.getElementById('addr-state').value = '';
-        document.getElementById('addr-zip').value = '';
-        document.getElementById('addr-country').value = 'United States';
-        document.getElementById('addr-phone').value = '';
-        document.getElementById('addr-default').checked = false;
-        document.getElementById('addr-modal-title').textContent = 'Add New Address';
-      }
-      modal.classList.add('active');
+    function showInlineLogin() {
+      document.getElementById('inline-login-form').style.display = 'block';
+      document.getElementById('inline-register-form').style.display = 'none';
     }
-
-    function closeAddressModal() {
-      var modal = document.getElementById('address-modal');
-      if (modal) modal.classList.remove('active');
-      editingAddressIndex = -1;
-    }
-
-    function saveAddress() {
-      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-      if (!user) return;
-      if (!user.addresses) user.addresses = [];
-
-      var newAddr = {
-        type: document.getElementById('addr-type').value,
-        name: document.getElementById('addr-name').value,
-        line1: document.getElementById('addr-line1').value,
-        line2: document.getElementById('addr-line2').value,
-        city: document.getElementById('addr-city').value,
-        state: document.getElementById('addr-state').value,
-        zip: document.getElementById('addr-zip').value,
-        country: document.getElementById('addr-country').value,
-        phone: document.getElementById('addr-phone').value,
-        isDefault: document.getElementById('addr-default').checked
-      };
-
-      if (!newAddr.name || !newAddr.line1 || !newAddr.city || !newAddr.zip) {
-        alert('Please fill in required fields');
-        return;
-      }
-
-      if (editingAddressIndex >= 0) {
-        user.addresses[editingAddressIndex] = newAddr;
-      } else {
-        user.addresses.push(newAddr);
-      }
-
-      // If set as default, unset others
-      if (newAddr.isDefault) {
-        user.addresses.forEach(function(a, i) {
-          if (i !== editingAddressIndex) a.isDefault = false;
-        });
-      }
-
-      // Update users array
-      var users = JSON.parse(localStorage.getItem('users') || '[]');
-      var userIndex = users.findIndex(function(u) { return u.id === user.id; });
-      if (userIndex !== -1) users[userIndex] = user;
-      localStorage.setItem('users', JSON.stringify(users));
-      localStorage.setItem('currentUser', JSON.stringify(user));
-
-      closeAddressModal();
-      renderAddresses(user.addresses);
-    }
-
-    function deleteAddress(index) {
-      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-      if (!user || !user.addresses) return;
-      user.addresses.splice(index, 1);
-      var users = JSON.parse(localStorage.getItem('users') || '[]');
-      var userIndex = users.findIndex(function(u) { return u.id === user.id; });
-      if (userIndex !== -1) users[userIndex] = user;
-      localStorage.setItem('users', JSON.stringify(users));
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      renderAddresses(user.addresses);
+    function showInlineRegister() {
+      document.getElementById('inline-login-form').style.display = 'none';
+      document.getElementById('inline-register-form').style.display = 'block';
     }
 
     function renderAddresses(addresses) {
       var container = document.getElementById('address-list');
       if (!container) return;
       if (!addresses || addresses.length === 0) {
-        container.innerHTML = '<p style="color:#999; font-size:14px;">No saved addresses. Add one below.</p>';
+        container.innerHTML = '<p style="color:#999;font-size:14px;">No saved addresses yet.</p>';
         return;
       }
       var html = '';
       addresses.forEach(function(addr, i) {
-        html += '<div class="address-card' + (addr.isDefault ? ' default' : '') + '" style="margin-bottom:12px;">';
+        html += '<div class="address-card' + (addr.isDefault ? ' default' : '') + '" style="margin-bottom:12px;position:relative;">';
         if (addr.isDefault) html += '<span class="address-badge">Default</span>';
         html += '<div class="address-type">' + addr.type + '</div>';
         html += '<div class="address-name">' + addr.name + '</div>';
@@ -1512,17 +1366,177 @@
       container.innerHTML = html;
     }
 
+    function openAddressModal(index) {
+      editingAddressIndex = index >= 0 ? index : -1;
+      var modal = document.getElementById('address-modal');
+      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (index >= 0 && user && user.addresses && user.addresses[index]) {
+        var a = user.addresses[index];
+        document.getElementById('addr-type').value = a.type || 'Home';
+        document.getElementById('addr-name').value = a.name || '';
+        document.getElementById('addr-line1').value = a.line1 || '';
+        document.getElementById('addr-line2').value = a.line2 || '';
+        document.getElementById('addr-city').value = a.city || '';
+        document.getElementById('addr-state').value = a.state || '';
+        document.getElementById('addr-zip').value = a.zip || '';
+        document.getElementById('addr-country').value = a.country || 'United States';
+        document.getElementById('addr-phone').value = a.phone || '';
+        document.getElementById('addr-default').checked = !!a.isDefault;
+        document.getElementById('addr-modal-title').textContent = 'Edit Address';
+      } else {
+        ['addr-type','addr-name','addr-line1','addr-line2','addr-city','addr-state','addr-zip','addr-country','addr-phone'].forEach(function(id) { document.getElementById(id).value = ''; });
+        document.getElementById('addr-country').value = 'United States';
+        document.getElementById('addr-default').checked = false;
+        document.getElementById('addr-modal-title').textContent = 'Add New Address';
+      }
+      modal.classList.add('active');
+    }
+
+    function closeAddressModal() {
+      var modal = document.getElementById('address-modal');
+      if (modal) modal.classList.remove('active');
+      editingAddressIndex = -1;
+    }
+
+    function saveAddress() {
+      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (!user) return;
+      if (!user.addresses) user.addresses = [];
+      var addr = {
+        type: document.getElementById('addr-type').value,
+        name: document.getElementById('addr-name').value,
+        line1: document.getElementById('addr-line1').value,
+        line2: document.getElementById('addr-line2').value,
+        city: document.getElementById('addr-city').value,
+        state: document.getElementById('addr-state').value,
+        zip: document.getElementById('addr-zip').value,
+        country: document.getElementById('addr-country').value,
+        phone: document.getElementById('addr-phone').value,
+        isDefault: document.getElementById('addr-default').checked
+      };
+      if (!addr.name || !addr.line1 || !addr.city || !addr.zip) {
+        alert('Please fill in all required fields'); return;
+      }
+      if (editingAddressIndex >= 0) user.addresses[editingAddressIndex] = addr;
+      else user.addresses.push(addr);
+      if (addr.isDefault) user.addresses.forEach(function(a, i) { if (i !== editingAddressIndex) a.isDefault = false; });
+      var users = JSON.parse(localStorage.getItem('users') || '[]');
+      var idx = users.findIndex(function(u) { return u.id === user.id; });
+      if (idx !== -1) users[idx] = user;
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      closeAddressModal();
+      renderAddresses(user.addresses);
+    }
+
+    function deleteAddress(index) {
+      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (!user || !user.addresses) return;
+      user.addresses.splice(index, 1);
+      var users = JSON.parse(localStorage.getItem('users') || '[]');
+      var idx = users.findIndex(function(u) { return u.id === user.id; });
+      if (idx !== -1) users[idx] = user;
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      renderAddresses(user.addresses);
+    }
+
     function setDefaultAddress(index) {
       var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
       if (!user || !user.addresses) return;
       user.addresses.forEach(function(a, i) { a.isDefault = (i === index); });
       var users = JSON.parse(localStorage.getItem('users') || '[]');
-      var userIndex = users.findIndex(function(u) { return u.id === user.id; });
-      if (userIndex !== -1) users[userIndex] = user;
+      var idx = users.findIndex(function(u) { return u.id === user.id; });
+      if (idx !== -1) users[idx] = user;
       localStorage.setItem('users', JSON.stringify(users));
       localStorage.setItem('currentUser', JSON.stringify(user));
       renderAddresses(user.addresses);
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      var accountContent = document.getElementById('account-content');
+      var authSection = document.getElementById('auth-section');
+
+      if (user && accountContent) {
+        // Logged in - show account content
+        accountContent.style.display = 'block';
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-email').textContent = user.email;
+        document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
+        var tierInfo = { bronze:{name:'Bronze Member'}, silver:{name:'Silver Member'}, gold:{name:'Gold Member'}, platinum:{name:'Platinum Member'} };
+        document.getElementById('membership-tier').textContent = (tierInfo[user.tier] || tierInfo.bronze).name;
+        var badge = document.getElementById('membership-badge');
+        badge.className = 'membership-badge tier-' + (user.tier || 'bronze');
+        document.getElementById('profile-name').value = user.name || '';
+        document.getElementById('profile-email').value = user.email || '';
+        document.getElementById('profile-phone').value = user.phone || '';
+        document.getElementById('profile-birthday').value = user.birthday || '';
+        document.getElementById('points-balance').textContent = (user.points || 0).toLocaleString();
+        document.getElementById('lifetime-points').textContent = (user.lifetimePoints || 0).toLocaleString();
+        document.getElementById('orders-count').textContent = (user.orders && user.orders.length) || 0;
+        document.getElementById('wishlist-count').textContent = (user.wishlist && user.wishlist.length) || 0;
+        renderAddresses(user.addresses || []);
+      } else {
+        // Show inline auth form
+        if (authSection) {
+          authSection.style.display = 'block';
+          showInlineLogin();
+        }
+      }
+
+      // Logout
+      var logoutBtn = document.getElementById('logout-btn');
+      if (logoutBtn) logoutBtn.addEventListener('click', logout);
+
+      // Add address button
+      var addAddrBtn = document.getElementById('add-address-btn');
+      if (addAddrBtn) addAddrBtn.addEventListener('click', function() { openAddressModal(-1); });
+
+      // Address modal close
+      var addrOverlay = document.getElementById('addr-overlay');
+      var addrClose = document.getElementById('addr-close');
+      if (addrOverlay) addrOverlay.addEventListener('click', closeAddressModal);
+      if (addrClose) addrClose.addEventListener('click', closeAddressModal);
+
+      // Inline form switchers
+      var showReg = document.getElementById('show-register');
+      var showLog = document.getElementById('show-login');
+      if (showReg) showReg.addEventListener('click', function(e) { e.preventDefault(); showInlineRegister(); });
+      if (showLog) showLog.addEventListener('click', function(e) { e.preventDefault(); showInlineLogin(); });
+
+      // Inline login
+      var loginBtn = document.getElementById('login-btn');
+      if (loginBtn) loginBtn.addEventListener('click', function() {
+        var email = document.getElementById('login-email').value;
+        var password = document.getElementById('login-password').value;
+        var errEl = document.getElementById('login-error');
+        var sucEl = document.getElementById('login-success');
+        if (errEl) errEl.style.display = 'none';
+        var result = login(email, password);
+        if (result.success) {
+          location.reload();
+        } else {
+          if (errEl) { errEl.textContent = result.message; errEl.style.display = 'block'; }
+        }
+      });
+
+      // Inline register
+      var regBtn = document.getElementById('register-btn');
+      if (regBtn) regBtn.addEventListener('click', function() {
+        var name = document.getElementById('register-name').value;
+        var email = document.getElementById('register-email').value;
+        var password = document.getElementById('register-password').value;
+        var confirm = document.getElementById('register-confirm').value;
+        var errEl = document.getElementById('register-error');
+        if (errEl) errEl.style.display = 'none';
+        if (!name || !email || !password) { if (errEl) { errEl.textContent = 'Please fill in all fields'; errEl.style.display = 'block'; } return; }
+        if (password !== confirm) { if (errEl) { errEl.textContent = 'Passwords do not match'; errEl.style.display = 'block'; } return; }
+        var result = register(name, email, password);
+        if (result.success) location.reload();
+        else { if (errEl) { errEl.textContent = result.message; errEl.style.display = 'block'; } }
+      });
+    });
   </script>
 </body>
 </html>
