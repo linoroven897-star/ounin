@@ -102,6 +102,69 @@ function logout() {
   }
 }
 
+// Update user profile
+function updateProfile(data) {
+  try {
+    const user = getCurrentUser();
+    if (!user) return { success: false, message: 'Not logged in' };
+    
+    // Update allowed fields
+    if (data.name !== undefined) user.name = data.name;
+    if (data.email !== undefined) user.email = data.email;
+    if (data.phone !== undefined) user.phone = data.phone;
+    if (data.birthday !== undefined) user.birthday = data.birthday;
+    
+    // Update in users array
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === user.id);
+    if (userIndex !== -1) {
+      users[userIndex] = user;
+      saveUsers(users);
+      localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+    
+    return { success: true, user };
+  } catch (e) {
+    console.warn('updateProfile: error', e);
+    return { success: false, message: 'Failed to update profile' };
+  }
+}
+
+// Change password
+function changePassword(currentPassword, newPassword) {
+  try {
+    const user = getCurrentUser();
+    if (!user) return { success: false, message: 'Not logged in' };
+    
+    // Verify current password
+    if (user.password !== currentPassword) {
+      return { success: false, message: 'Current password is incorrect' };
+    }
+    
+    // Validate new password
+    if (!newPassword || newPassword.length < 6) {
+      return { success: false, message: 'New password must be at least 6 characters' };
+    }
+    
+    // Update password
+    user.password = newPassword;
+    
+    // Update in users array
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === user.id);
+    if (userIndex !== -1) {
+      users[userIndex] = user;
+      saveUsers(users);
+      localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+    
+    return { success: true, message: 'Password updated successfully' };
+  } catch (e) {
+    console.warn('changePassword: error', e);
+    return { success: false, message: 'Failed to change password' };
+  }
+}
+
 // Get all users
 function getUsers() {
   try {
