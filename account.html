@@ -1276,6 +1276,7 @@
         <div class="auth-fields">
           <div class="auth-error" id="register-error" style="display:none; color:#c00; margin-bottom:12px;"></div>
           <div class="auth-success" id="register-success" style="display:none; color:green; margin-bottom:12px;"></div>
+          <div class="form-group"><label class="form-label">Invitation Code *</label><input type="text" class="form-input" id="register-invite" placeholder="Enter invitation code" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:15px;text-transform:uppercase;"></div>
           <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="register-name" placeholder="John Doe" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:15px;"></div>
           <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="register-email" placeholder="your@email.com" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:15px;"></div>
           <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="register-password" placeholder="Create a password" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:15px;"></div>
@@ -1681,15 +1682,16 @@
       // Inline register
       var regBtn = document.getElementById('register-btn');
       if (regBtn) regBtn.addEventListener('click', function() {
+        var inviteCode = document.getElementById('register-invite').value;
         var name = document.getElementById('register-name').value;
         var email = document.getElementById('register-email').value;
         var password = document.getElementById('register-password').value;
         var confirm = document.getElementById('register-confirm').value;
         var errEl = document.getElementById('register-error');
         if (errEl) errEl.style.display = 'none';
-        if (!name || !email || !password) { if (errEl) { errEl.textContent = 'Please fill in all fields'; errEl.style.display = 'block'; } return; }
+        if (!inviteCode || !name || !email || !password) { if (errEl) { errEl.textContent = 'Please fill in all fields including invitation code'; errEl.style.display = 'block'; } return; }
         if (password !== confirm) { if (errEl) { errEl.textContent = 'Passwords do not match'; errEl.style.display = 'block'; } return; }
-        var result = register(name, email, password);
+        var result = register(name, email, password, inviteCode);
         if (result.success) location.reload();
         else { if (errEl) { errEl.textContent = result.message; errEl.style.display = 'block'; } }
       });

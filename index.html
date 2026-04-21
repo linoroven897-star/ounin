@@ -797,6 +797,10 @@
         <div class="auth-fields">
           <div class="auth-error" id="register-error"></div>
           <div class="form-group">
+            <label class="form-label">Invitation Code *</label>
+            <input type="text" class="form-input" id="register-invite" placeholder="Enter invitation code" style="text-transform:uppercase;">
+          </div>
+          <div class="form-group">
             <label class="form-label">Full Name</label>
             <input type="text" class="form-input" id="register-name" placeholder="John Smith">
           </div>
@@ -1006,6 +1010,7 @@
     // Register
     if (registerBtn) {
       registerBtn.addEventListener('click', () => {
+        const invite = document.getElementById('register-invite').value;
         const name = document.getElementById('register-name').value;
         const email = document.getElementById('register-email').value;
         const password = document.getElementById('register-password').value;
@@ -1014,8 +1019,8 @@
         
         if (errorEl) errorEl.classList.remove('show');
         
-        if (!name || !email || !password) {
-          if (errorEl) { errorEl.textContent = 'Please fill in all fields'; errorEl.classList.add('show'); }
+        if (!invite || !name || !email || !password) {
+          if (errorEl) { errorEl.textContent = 'Please fill in all fields including invitation code'; errorEl.classList.add('show'); }
           return;
         }
         
@@ -1029,7 +1034,7 @@
           return;
         }
         
-        const result = register(name, email, password);
+        const result = register(name, email, password, invite);
         if (result.success) {
           closeAuthModal();
           updateAuthUI();

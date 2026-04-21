@@ -1,8 +1,36 @@
 // Auth System - Login/Register/Logout using localStorage
 
+// ===========================================
+// CONFIG: Invitation Codes
+// Add or remove codes to control registration
+// ===========================================
+const VALID_INVITE_CODES = [
+  'OUNIN2026',    // Example code - change these to your actual invite codes
+  'STEAMOVEN',    // Add more codes as needed
+  'CHEF2026',
+];
+
+// ===========================================
+// End Config
+// ===========================================
+
 // Initialize auth state on page load
 function initAuth() {
   updateAuthUI();
+}
+
+// Check if invite code is valid
+function isValidInviteCode(code) {
+  if (!code) return false;
+  return VALID_INVITE_CODES.includes(code.toUpperCase().trim());
+}
+
+// Get list of valid codes (for admin display, masked)
+function getMaskedCodes() {
+  return VALID_INVITE_CODES.map(function(code) {
+    if (code.length <= 4) return '***' + code.slice(-2);
+    return code.slice(0, 2) + '***' + code.slice(-2);
+  });
 }
 
 // Update UI based on auth state
@@ -32,8 +60,13 @@ function getCurrentUser() {
 }
 
 // Register new user
-function register(name, email, password) {
+function register(name, email, password, inviteCode) {
   try {
+    // Validate invite code first
+    if (!isValidInviteCode(inviteCode)) {
+      return { success: false, message: 'Invalid invitation code. Please enter a valid code to register.' };
+    }
+
     const users = getUsers();
     
     // Check if email already exists
@@ -347,14 +380,16 @@ document.addEventListener('DOMContentLoaded', function() {
       var emailEl = document.getElementById('register-email');
       var passwordEl = document.getElementById('register-password');
       var confirmEl = document.getElementById('register-confirm');
+      var inviteEl = document.getElementById('register-invite');
       var errEl = document.getElementById('register-error');
       var name = nameEl ? nameEl.value : '';
       var email = emailEl ? emailEl.value : '';
       var password = passwordEl ? passwordEl.value : '';
       var confirm = confirmEl ? confirmEl.value : '';
+      var inviteCode = inviteEl ? inviteEl.value : '';
       if (errEl) errEl.classList.remove('show');
-      if (!name || !email || !password) {
-        if (errEl) { errEl.textContent = 'Please fill in all fields'; errEl.classList.add('show'); }
+      if (!name || !email || !password || !inviteCode) {
+        if (errEl) { errEl.textContent = 'Please fill in all fields including invitation code'; errEl.classList.add('show'); }
         return;
       }
       if (password !== confirm) {
@@ -365,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (errEl) { errEl.textContent = 'Password must be at least 6 characters'; errEl.classList.add('show'); }
         return;
       }
-      var result = register(name, email, password);
+      var result = register(name, email, password, inviteCode);
       if (result.success) {
         if (typeof showToast === 'function') showToast('Welcome to Ounin! You got 100 welcome points!');
         setTimeout(function() { location.reload(); }, 800);
