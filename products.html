@@ -436,33 +436,6 @@
           <p class="auth-switch">Already have an account? <a href="#" id="show-login">Sign in</a></p>
         </div>
       </div>
-
-      <!-- Email Verification Form -->
-      <div class="auth-form" id="verify-form" style="display: none;">
-        <div class="auth-header">
-          <h2 class="auth-title">Verify Your Email</h2>
-          <p class="auth-subtitle" id="verify-email-hint">We've sent a verification code to your email</p>
-        </div>
-        <div class="auth-fields">
-          <div class="auth-error" id="verify-error"></div>
-          <div class="auth-success" id="verify-success"></div>
-          <div class="form-group">
-            <label class="form-label">Verification Code</label>
-            <input type="text" class="form-input" id="verify-code" placeholder="Enter 6-digit code" maxlength="6" style="letter-spacing:4px;font-size:18px;text-align:center;">
-          </div>
-          <div id="verify-code-display" style="background:#f5f5f5;border-radius:8px;padding:16px;margin-bottom:16px;text-align:center;display:none;">
-            <p style="font-size:12px;color:#666;margin-bottom:8px;">Your verification code (demo only):</p>
-            <p id="verify-code-value" style="font-size:24px;font-weight:700;letter-spacing:4px;color:#1a1a1a;"></p>
-          </div>
-          <button class="auth-submit-btn" id="verify-btn">Verify Email</button>
-          <p style="text-align:center;margin-top:16px;font-size:13px;color:#666;">
-            <a href="#" id="verify-resend" style="color:#1a1a1a;">Resend code</a>
-          </p>
-          <p style="text-align:center;margin-top:12px;">
-            <a href="#" id="verify-back" style="color:#666;font-size:13px;">Back to sign in</a>
-          </p>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -585,45 +558,8 @@
       if (password !== confirm) { if (errorEl) { errorEl.textContent = 'Passwords do not match'; errorEl.classList.add('show'); } return; }
       if (password.length < 6) { if (errorEl) { errorEl.textContent = 'Password must be at least 6 characters'; errorEl.classList.add('show'); } return; }
       const result = register(name, email, password);
-      if (result.success) {
-        if (result.needsVerification) {
-          // Show verification form
-          document.getElementById('register-form').style.display = 'none';
-          document.getElementById('verify-form').style.display = 'block';
-          document.getElementById('verify-email-hint').textContent = 'We sent a code to: ' + email;
-          document.getElementById('verify-code-display').style.display = 'block';
-          document.getElementById('verify-code-value').textContent = result.verifyCode;
-          sessionStorage.setItem('verifyEmail', email);
-        } else {
-          closeAuthModal(); updateAuthUI(); if (typeof showToast === 'function') showToast('Welcome to Ounin! You got 100 welcome points!'); window.location.href = 'account.html';
-        }
-      } else { if (errorEl) { errorEl.textContent = result.message; errorEl.classList.add('show'); } }
+      if (result.success) { closeAuthModal(); updateAuthUI(); if (typeof showToast === 'function') showToast('Welcome to Ounin! You got 100 welcome points!'); } else { if (errorEl) { errorEl.textContent = result.message; errorEl.classList.add('show'); } }
     });
-
-    // Verify email
-    const verifyBtn = document.getElementById('verify-btn');
-    if (verifyBtn) {
-      verifyBtn.addEventListener('click', () => {
-        const code = document.getElementById('verify-code').value.trim();
-        const email = sessionStorage.getItem('verifyEmail');
-        const errorEl = document.getElementById('verify-error');
-        const successEl = document.getElementById('verify-success');
-        if (errorEl) errorEl.style.display = 'none';
-        if (successEl) successEl.style.display = 'none';
-        if (!code || code.length !== 6) { if (errorEl) { errorEl.textContent = 'Please enter the 6-digit code'; errorEl.style.display = 'block'; } return; }
-        const result = completeRegistration(email, code);
-        if (result.success) {
-          if (successEl) { successEl.textContent = 'Email verified! Redirecting...'; successEl.style.display = 'block'; }
-          setTimeout(() => { closeAuthModal(); updateAuthUI(); if (typeof showToast === 'function') showToast('Welcome to Ounin! Your email is verified!'); window.location.href = 'account.html'; }, 1000);
-        } else { if (errorEl) { errorEl.textContent = result.message; errorEl.style.display = 'block'; } }
-      });
-    }
-    const verifyCodeInput = document.getElementById('verify-code');
-    if (verifyCodeInput) { verifyCodeInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { verifyBtn && verifyBtn.click(); } }); }
-    const verifyResend = document.getElementById('verify-resend');
-    if (verifyResend) { verifyResend.addEventListener('click', (e) => { e.preventDefault(); const email = sessionStorage.getItem('verifyEmail'); if (!email) return; const newCode = generateVerificationCode(); sendVerificationEmail(email, newCode); document.getElementById('verify-code-display').style.display = 'block'; document.getElementById('verify-code-value').textContent = newCode; if (typeof showToast === 'function') showToast('New verification code sent!'); }); }
-    const verifyBack = document.getElementById('verify-back');
-    if (verifyBack) { verifyBack.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('verify-form').style.display = 'none'; document.getElementById('login-form').style.display = 'block'; sessionStorage.removeItem('verifyEmail'); }); }
 
     const accountBtn = document.querySelector('a[aria-label="Account"]');
     if (accountBtn) accountBtn.addEventListener('click', (e) => { const user = getCurrentUser(); if (!user) { e.preventDefault(); openAuthModal(); } });

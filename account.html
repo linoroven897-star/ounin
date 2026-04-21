@@ -1284,26 +1284,6 @@
           <p style="text-align:center;margin-top:20px;color:#666;">Already have an account? <a href="#" id="show-login" style="color:#1a1a1a;font-weight:600;">Sign in</a></p>
         </div>
       </div>
-
-      <!-- Email Verification Form -->
-      <div class="auth-form" id="verify-form" style="display:none;">
-        <div class="auth-header">
-          <h2 class="auth-title" style="font-size:28px; margin-bottom:8px;">Verify Your Email</h2>
-          <p class="auth-subtitle" id="verify-email-hint" style="color:#666; margin-bottom:32px;">We've sent a verification code to your email</p>
-        </div>
-        <div class="auth-fields">
-          <div class="auth-error" id="verify-error" style="display:none; color:#c00; margin-bottom:12px;"></div>
-          <div class="auth-success" id="verify-success" style="display:none; color:green; margin-bottom:12px;"></div>
-          <div class="form-group"><label class="form-label">Verification Code</label><input type="text" class="form-input" id="verify-code" placeholder="Enter 6-digit code" maxlength="6" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:8px;font-size:18px;text-align:center;letter-spacing:4px;"></div>
-          <div id="verify-code-display" style="background:#f5f5f5;border-radius:8px;padding:16px;margin-bottom:16px;text-align:center;display:none;">
-            <p style="font-size:12px;color:#666;margin-bottom:8px;">Your verification code (demo only):</p>
-            <p id="verify-code-value" style="font-size:24px;font-weight:700;letter-spacing:4px;color:#1a1a1a;"></p>
-          </div>
-          <button class="auth-submit-btn" id="verify-btn" style="width:100%;padding:14px;background:#1a1a1a;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;margin-top:8px;">Verify Email</button>
-          <p style="text-align:center;margin-top:16px;font-size:13px;color:#666;"><a href="#" id="verify-resend" style="color:#1a1a1a;font-weight:600;">Resend code</a></p>
-          <p style="text-align:center;margin-top:12px;"><a href="#" id="verify-back" style="color:#666;font-size:13px;">Back to sign in</a></p>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -1710,42 +1690,9 @@
         if (!name || !email || !password) { if (errEl) { errEl.textContent = 'Please fill in all fields'; errEl.style.display = 'block'; } return; }
         if (password !== confirm) { if (errEl) { errEl.textContent = 'Passwords do not match'; errEl.style.display = 'block'; } return; }
         var result = register(name, email, password);
-        if (result.success) {
-          if (result.needsVerification) {
-            document.getElementById('inline-register-form').style.display = 'none';
-            document.getElementById('verify-form').style.display = 'block';
-            document.getElementById('verify-email-hint').textContent = 'We sent a code to: ' + email;
-            document.getElementById('verify-code-display').style.display = 'block';
-            document.getElementById('verify-code-value').textContent = result.verifyCode;
-            sessionStorage.setItem('verifyEmail', email);
-          } else {
-            location.reload();
-          }
-        } else { if (errEl) { errEl.textContent = result.message; errEl.style.display = 'block'; } }
+        if (result.success) location.reload();
+        else { if (errEl) { errEl.textContent = result.message; errEl.style.display = 'block'; } }
       });
-
-      // Verify email
-      var verifyBtn = document.getElementById('verify-btn');
-      if (verifyBtn) verifyBtn.addEventListener('click', function() {
-        var code = document.getElementById('verify-code').value.trim();
-        var email = sessionStorage.getItem('verifyEmail');
-        var errEl = document.getElementById('verify-error');
-        var sucEl = document.getElementById('verify-success');
-        if (errEl) errEl.style.display = 'none';
-        if (sucEl) sucEl.style.display = 'none';
-        if (!code || code.length !== 6) { if (errEl) { errEl.textContent = 'Please enter the 6-digit code'; errEl.style.display = 'block'; } return; }
-        var result = completeRegistration(email, code);
-        if (result.success) {
-          if (sucEl) { sucEl.textContent = 'Email verified! Redirecting...'; sucEl.style.display = 'block'; }
-          setTimeout(function() { location.reload(); }, 1000);
-        } else { if (errEl) { errEl.textContent = result.message; errEl.style.display = 'block'; } }
-      });
-      var verifyCodeInput = document.getElementById('verify-code');
-      if (verifyCodeInput) verifyCodeInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') { verifyBtn && verifyBtn.click(); } });
-      var verifyResend = document.getElementById('verify-resend');
-      if (verifyResend) verifyResend.addEventListener('click', function(e) { e.preventDefault(); var email = sessionStorage.getItem('verifyEmail'); if (!email) return; var newCode = generateVerificationCode(); sendVerificationEmail(email, newCode); document.getElementById('verify-code-display').style.display = 'block'; document.getElementById('verify-code-value').textContent = newCode; });
-      var verifyBack = document.getElementById('verify-back');
-      if (verifyBack) verifyBack.addEventListener('click', function(e) { e.preventDefault(); document.getElementById('verify-form').style.display = 'none'; document.getElementById('inline-login-form').style.display = 'block'; sessionStorage.removeItem('verifyEmail'); });
     });
   </script>
 </body>
