@@ -31,7 +31,70 @@ function getCurrentUser() {
   }
 }
 
-// Register new user
+// Generate 6-digit verification code
+function generateVerificationCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Send verification email (simulated - shows code in UI)
+function sendVerificationEmail(email, code) {
+  // In production, this would call your backend API to send a real email
+  // For now, we store the code and it will be shown to user in UI
+  try {
+    const pending = JSON.parse(localStorage.getItem('pendingVerification') || '{}');
+    pending[email] = {
+      code: code,
+      expires: Date.now() + 30 * 60 * 1000 // 30 minutes expiry
+    };
+    localStorage.setItem('pendingVerification', JSON.stringify(pending));
+    return true;
+  } catch (e) {
+    console.warn('sendVerificationEmail: error', e);
+    return false;
+  }
+}
+
+// Verify email code
+function verifyEmailCode(email, code) {
+  try {
+    const pending = JSON.parse(localStorage.getItem('pendingVerification') || '{}');
+    const record = pending[email];
+    
+    if (!record) {
+      return { success: false, message: 'No verification code found. Please register again.' };
+    }
+    
+    if (Date.now() > record.expires) {
+      delete pending[email];
+      localStorage.setItem('pendingVerification', JSON.stringify(pending));
+      return { success: false, message: 'Verification code expired. Please register again.' };
+    }
+    
+    if (record.code !== code) {
+      return { success: false, message: 'Invalid verification code.' };
+    }
+    
+    // Code valid - mark email as verified
+    delete pending[email];
+    localStorage.setItem('pendingVerification', JSON.stringify(pending));
+    
+    // Update user to verified status
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.email === email);
+    if (userIndex !== -1) {
+      users[userIndex].emailVerified = true;
+      saveUsers(users);
+      localStorage.setItem('currentUser', JSON.stringify(users[userIndex]));
+    }
+    
+    return { success: true, message: 'Email verified successfully!' };
+  } catch (e) {
+    console.warn('verifyEmailCode: error', e);
+    return { success: false, message: 'Verification failed. Please try again.' };
+  }
+}
+
+// Register new user (returns verification code for display)
 function register(name, email, password) {
   try {
     const users = getUsers();
@@ -41,12 +104,13 @@ function register(name, email, password) {
       return { success: false, message: 'Email already registered' };
     }
     
-    // Create new user with Bronze tier
+    // Create new user with Bronze tier (not verified yet)
     const newUser = {
       id: 'user_' + Date.now(),
       name,
       email,
       password, // In production, this should be hashed
+      emailVerified: false,
       tier: 'bronze',
       points: 100, // Welcome bonus
       lifetimePoints: 100,
@@ -59,14 +123,106 @@ function register(name, email, password) {
       createdAt: new Date().toISOString()
     };
     
+    // Generate verification code
+    const verifyCode = generateVerificationCode();
+    sendVerificationEmail(email, verifyCode);
+    
+    // Store user as pending (not added to users list yet)
+    // We store in pendingRegistration until email is verified
+    try {
+      const pending = JSON.parse(localStorage.getItem('pendingRegistration') || '{}');
+      pending[email] = {
+        user: newUser,
+        expires: Date.now() + 30 * 60 * 1000 // 30 minutes to verify
+      };
+      localStorage.setItem('pendingRegistration', JSON.stringify(pending));
+    } catch (e) {
+      console.warn('pendingRegistration: storage error', e);
+    }
+    
+    // Return success with verification code (for demo purposes)
+    // In production, the code would be sent via email and not returned here
+    return { 
+      success: true, 
+      needsVerification: true,
+      verifyCode: verifyCode,
+      message: 'Registration successful! Please verify your email.' 
+    };
+  } catch (e) {
+    console.warn('register: error', e);
+    return { success: false, message: 'Registration failed. Please try again.' };
+  }
+}
+
+// Complete registration after email verification
+function completeRegistration(email, code) {
+  try {
+    // First verify the code
+    const verifyResult = verifyEmailCode(email, code);
+    if (!verifyResult.success) {
+      return verifyResult;
+    }
+    
+    // Now move user from pending to active
+    const pending = JSON.parse(localStorage.getItem('pendingRegistration') || '{}');
+    const record = pending[email];
+    
+    if (!record) {
+      return { success: false, message: 'Registration session expired. Please register again.' };
+    }
+    
+    if (Date.now() > record.expires) {
+      delete pending[email];
+      localStorage.setItem('pendingRegistration', JSON.stringify(pending));
+      return { success: false, message: 'Registration session expired. Please register again.' };
+    }
+    
+    const newUser = record.user;
+    newUser.emailVerified = true;
+    
+    const users = getUsers();
     users.push(newUser);
     saveUsers(users);
     localStorage.setItem('currentUser', JSON.stringify(newUser));
     
+    delete pending[email];
+    localStorage.setItem('pendingRegistration', JSON.stringify(pending));
+    
     return { success: true, user: newUser };
   } catch (e) {
-    console.warn('register: error', e);
-    return { success: false, message: 'Registration failed. Please try again.' };
+    console.warn('completeRegistration: error', e);
+    return { success: false, message: 'Verification failed. Please try again.' };
+  }
+}
+
+// Login user (checks email verification)
+function login(email, password) {
+  try {
+    const users = getUsers();
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (!user) {
+      return { success: false, message: 'Invalid email or password' };
+    }
+    
+    // Check if email is verified
+    if (!user.emailVerified) {
+      // Resend verification code
+      const verifyCode = generateVerificationCode();
+      sendVerificationEmail(email, verifyCode);
+      return { 
+        success: false, 
+        needsVerification: true,
+        verifyCode: verifyCode,
+        message: 'Please verify your email first. A new verification code has been sent.' 
+      };
+    }
+    
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    return { success: true, user };
+  } catch (e) {
+    console.warn('login: error', e);
+    return { success: false, message: 'Login failed. Please try again.' };
   }
 }
 
@@ -367,11 +523,99 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       var result = register(name, email, password);
       if (result.success) {
-        if (typeof showToast === 'function') showToast('Welcome to Ounin! You got 100 welcome points!');
-        setTimeout(function() { location.reload(); }, 800);
+        if (result.needsVerification) {
+          // Show verification form
+          var registerForm = document.getElementById('register-form');
+          var verifyForm = document.getElementById('verify-form');
+          if (registerForm) registerForm.style.display = 'none';
+          if (verifyForm) {
+            verifyForm.style.display = 'block';
+            var hintEl = document.getElementById('verify-email-hint');
+            if (hintEl) hintEl.textContent = 'We sent a code to: ' + email;
+            var codeDisplay = document.getElementById('verify-code-display');
+            if (codeDisplay) codeDisplay.style.display = 'block';
+            var codeValue = document.getElementById('verify-code-value');
+            if (codeValue) codeValue.textContent = result.verifyCode;
+          }
+          sessionStorage.setItem('verifyEmail', email);
+        } else {
+          if (typeof showToast === 'function') showToast('Welcome to Ounin! You got 100 welcome points!');
+          setTimeout(function() { location.reload(); }, 800);
+        }
       } else {
         if (errEl) { errEl.textContent = result.message; errEl.classList.add('show'); }
       }
+    });
+  }
+
+  // Verify email button
+  var verifyBtn = document.getElementById('verify-btn');
+  if (verifyBtn) {
+    verifyBtn.addEventListener('click', function() {
+      var codeEl = document.getElementById('verify-code');
+      var email = sessionStorage.getItem('verifyEmail');
+      var errEl = document.getElementById('verify-error');
+      var sucEl = document.getElementById('verify-success');
+      var code = codeEl ? codeEl.value.trim() : '';
+      if (errEl) errEl.classList.remove('show');
+      if (sucEl) sucEl.classList.remove('show');
+      if (!code || code.length !== 6) {
+        if (errEl) { errEl.textContent = 'Please enter the 6-digit code'; errEl.classList.add('show'); }
+        return;
+      }
+      var result = completeRegistration(email, code);
+      if (result.success) {
+        if (sucEl) { sucEl.textContent = 'Email verified! Redirecting...'; sucEl.classList.add('show'); }
+        setTimeout(function() { 
+          if (typeof closeAuthModal === 'function') closeAuthModal();
+          if (typeof updateAuthUI === 'function') updateAuthUI();
+          if (typeof showToast === 'function') showToast('Welcome to Ounin! Your email is verified!');
+          location.reload();
+        }, 1000);
+      } else {
+        if (errEl) { errEl.textContent = result.message; errEl.classList.add('show'); }
+      }
+    });
+  }
+
+  // Verify code enter key
+  var verifyCodeInput = document.getElementById('verify-code');
+  if (verifyCodeInput) {
+    verifyCodeInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        var btn = document.getElementById('verify-btn');
+        if (btn) btn.click();
+      }
+    });
+  }
+
+  // Resend verification code
+  var verifyResend = document.getElementById('verify-resend');
+  if (verifyResend) {
+    verifyResend.addEventListener('click', function(e) {
+      e.preventDefault();
+      var email = sessionStorage.getItem('verifyEmail');
+      if (!email) return;
+      var newCode = generateVerificationCode();
+      sendVerificationEmail(email, newCode);
+      var codeDisplay = document.getElementById('verify-code-display');
+      if (codeDisplay) codeDisplay.style.display = 'block';
+      var codeValue = document.getElementById('verify-code-value');
+      if (codeValue) codeValue.textContent = newCode;
+      if (typeof showToast === 'function') showToast('New verification code sent!');
+    });
+  }
+
+  // Back to login from verify
+  var verifyBack = document.getElementById('verify-back');
+  if (verifyBack) {
+    verifyBack.addEventListener('click', function(e) {
+      e.preventDefault();
+      var verifyForm = document.getElementById('verify-form');
+      var loginForm = document.getElementById('login-form');
+      if (verifyForm) verifyForm.style.display = 'none';
+      if (loginForm) loginForm.style.display = 'block';
+      sessionStorage.removeItem('verifyEmail');
     });
   }
 });

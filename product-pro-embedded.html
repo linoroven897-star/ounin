@@ -540,6 +540,12 @@
         <div class="auth-header"><h2 class="auth-title">Create Account</h2><p class="auth-subtitle">Join Ounin and get 100 welcome points</p></div>
         <div class="auth-fields"><div class="auth-error" id="register-error"></div><div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="register-name" placeholder="John Smith"></div><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="register-email" placeholder="your@email.com"></div><div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="register-password" placeholder="Create a password"></div><div class="form-group"><label class="form-label">Confirm Password</label><input type="password" class="form-input" id="register-confirm" placeholder="Confirm your password"></div><button class="auth-submit-btn" id="register-btn">Create Account</button><p class="auth-switch">Already have an account? <a href="#" id="show-login">Sign in</a></p></div>
       </div>
+
+      <!-- Email Verification Form -->
+      <div class="auth-form" id="verify-form" style="display:none;">
+        <div class="auth-header"><h2 class="auth-title">Verify Your Email</h2><p class="auth-subtitle" id="verify-email-hint">We sent a code to your email</p></div>
+        <div class="auth-fields"><div class="auth-error" id="verify-error"></div><div class="auth-success" id="verify-success"></div><div class="form-group"><label class="form-label">Verification Code</label><input type="text" class="form-input" id="verify-code" placeholder="Enter 6-digit code" maxlength="6" style="letter-spacing:4px;font-size:18px;text-align:center;"></div><div id="verify-code-display" style="background:#f5f5f5;border-radius:8px;padding:16px;margin-bottom:16px;text-align:center;display:none;"><p style="font-size:12px;color:#666;margin-bottom:8px;">Your verification code (demo only):</p><p id="verify-code-value" style="font-size:24px;font-weight:700;letter-spacing:4px;color:#1a1a1a;"></p></div><button class="auth-submit-btn" id="verify-btn">Verify Email</button><p style="text-align:center;margin-top:16px;font-size:13px;color:#666;"><a href="#" id="verify-resend" style="color:#1a1a1a;">Resend code</a></p><p style="text-align:center;margin-top:12px;"><a href="#" id="verify-back" style="color:#666;font-size:13px;">Back to sign in</a></p></div>
+      </div>
     </div>
   </div>
 
