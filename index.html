@@ -32,7 +32,6 @@
 
   <!-- Preload critical above-the-fold assets -->
   <link rel="preload" as="image" href="assets/images/hero-banner-poster.png" fetchpriority="high">
-  <link rel="preload" as="video" href="assets/videos/hero-video.mp4" fetchpriority="high">
   <link rel="preload" as="image" href="assets/images/product-1a.jpg" fetchpriority="high">
   <link rel="preload" as="image" href="assets/images/product-2a.jpg" fetchpriority="high">
   <link rel="preload" as="image" href="assets/images/product-3a.jpg" fetchpriority="high">
@@ -168,7 +167,7 @@
   <section class="hero">
     <div class="hero-video-bg">
       <div class="hero-poster" id="hero-poster"></div>
-      <video autoplay muted loop playsinline webkit-playsinline preload="auto" class="hero-video-desktop video-ready" id="hero-video">
+      <video muted loop playsinline webkit-playsinline preload="none" class="hero-video-desktop" id="hero-video">
         <source src="assets/videos/hero-video.mp4" type="video/mp4">
       </video>
       <div class="hero-overlay"></div>
@@ -1185,24 +1184,31 @@
   </script>
   <script>
     // Ensure hero video plays smoothly without stutter
+    // Poster shows first, video loads in background, then swaps in
     (function() {
       var video = document.getElementById('hero-video');
       var poster = document.getElementById('hero-poster');
       if (!video) return;
-      // Wait for video to be ready before playing
-      video.addEventListener('canplay', function() {
-        video.classList.add('video-ready');
+
+      // Start loading video AFTER page has fully loaded (background)
+      window.addEventListener('load', function() {
+        // Give other critical resources a head start (200ms buffer)
+        setTimeout(function() {
+          video.load();
+        }, 200);
       });
-      video.addEventListener('playing', function() {
-        video.classList.add('video-playing');
-        // Fade out poster when video starts playing
+
+      // When video is ready to play through without buffering, swap it in
+      video.addEventListener('canplaythrough', function() {
+        // Fade in video
+        video.classList.add('video-ready');
+        // Fade out poster
         if (poster) {
           poster.classList.add('hidden');
         }
+        // Start playback
+        video.play().catch(function() {});
       });
-      // Force play in case autoplay was blocked
-      video.load();
-      video.play().catch(function() {});
     })();
   </script>
 </body>
