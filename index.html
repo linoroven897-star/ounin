@@ -1054,18 +1054,21 @@
   <script>
     // Floating popup logic
     const popup = document.getElementById('floating-popup');
-    const popupTitle = document.getElementById('popup-title');
-    const popupClose = document.getElementById('popup-close');
     const cookieBtn = document.getElementById('cookie-btn');
     const cookieAccept = document.getElementById('cookie-accept');
+    const popupClose = document.getElementById('popup-close');
 
     function openPopup() { popup.classList.add('active'); }
 
+    // Auto-show cookie popup on first visit (after page load)
+    if (!localStorage.getItem('cookieConsent')) {
+      window.addEventListener('load', function() {
+        setTimeout(openPopup, 2000);
+      });
+    }
+
     cookieBtn.addEventListener('click', () => openPopup());
     popupClose.addEventListener('click', () => popup.classList.remove('active'));
-
-    });
-
     cookieAccept.addEventListener('click', () => {
       popup.classList.remove('active');
       localStorage.setItem('cookieConsent', 'accepted');

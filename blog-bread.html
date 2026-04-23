@@ -309,10 +309,16 @@
 
     function openPopup() { popup.classList.add('active'); }
 
+    
+
+    // Auto-show cookie popup on first visit
+    if (!localStorage.getItem('cookieConsent')) {
+      window.addEventListener('load', function() {
+        setTimeout(function() { popup.classList.add('active'); }, 2000);
+      });
+    }
     cookieBtn.addEventListener('click', () => openPopup());
     popupClose.addEventListener('click', () => popup.classList.remove('active'));
-
-    });
 
     cookieAccept.addEventListener('click', () => {
       popup.classList.remove('active');
