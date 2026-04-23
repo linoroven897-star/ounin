@@ -169,9 +169,7 @@
 
   <!-- FLOATING POPUP -->
   <div class="floating-toggle">
-    <button class="floating-btn floating-btn-promo" id="promo-btn" aria-label="View Promotion">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
-    </button>
+    
     <button class="floating-btn floating-btn-cookie" id="cookie-btn" aria-label="Cookie Settings">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
     </button>
@@ -184,10 +182,7 @@
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
-    <div class="floating-popup-tabs">
-      <button class="floating-popup-tab active" data-tab="cookie">Cookie Policy</button>
-      <button class="floating-popup-tab" data-tab="promo">Current Offer</button>
-    </div>
+    
     <div class="floating-popup-content">
       <div class="floating-popup-panel active" id="panel-cookie">
         <div class="cookie-icon">
@@ -220,40 +215,13 @@
     const popupTitle = document.getElementById('popup-title');
     const popupClose = document.getElementById('popup-close');
     const cookieBtn = document.getElementById('cookie-btn');
-    const promoBtn = document.getElementById('promo-btn');
-    const tabs = document.querySelectorAll('.floating-popup-tab');
-    const panels = document.querySelectorAll('.floating-popup-panel');
     const cookieAccept = document.getElementById('cookie-accept');
 
-    function openPopup(tab) {
-      popup.classList.add('active');
-      if (tab === 'cookie') {
-        popupTitle.textContent = 'Cookie Settings';
-        tabs[0].classList.add('active');
-        tabs[1].classList.remove('active');
-        panels[0].classList.add('active');
-        panels[1].classList.remove('active');
-      } else {
-        popupTitle.textContent = 'Special Offer';
-        tabs[0].classList.remove('active');
-        tabs[1].classList.add('active');
-        panels[0].classList.remove('active');
-        panels[1].classList.add('active');
-      }
-    }
+    function openPopup() { popup.classList.add('active'); }
 
-    cookieBtn.addEventListener('click', () => openPopup('cookie'));
-    promoBtn.addEventListener('click', () => openPopup('promo'));
+    cookieBtn.addEventListener('click', () => openPopup());
     popupClose.addEventListener('click', () => popup.classList.remove('active'));
 
-    tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        panels.forEach(p => p.classList.remove('active'));
-        tab.classList.add('active');
-        panels[i].classList.add('active');
-        popupTitle.textContent = i === 0 ? 'Cookie Settings' : 'Special Offer';
-      });
     });
 
     cookieAccept.addEventListener('click', () => {
