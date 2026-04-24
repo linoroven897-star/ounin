@@ -1,4 +1,25 @@
-// Auth System - Login/Register/Logout using localStorage
+// Auth System - Shopify Storefront API
+
+const SHOPIFY_DOMAIN = 'ounin.myshopify.com';
+const STOREFRONT_TOKEN = '53bc4de5c4494487da5984ba38c2ffc4';
+const API_VERSION = '2024-01';
+
+const API_URL = `https://${SHOPIFY_DOMAIN}/api/${API_VERSION}/graphql.json`;
+
+// GraphQL helper
+async function shopifyFetch(query, variables = {}) {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': STOREFRONT_TOKEN
+    },
+    body: JSON.stringify({ query, variables })
+  });
+  const json = await res.json();
+  if (json.errors) throw new Error(json.errors[0].message);
+  return json.data;
+}
 
 // Initialize auth state on page load
 function initAuth() {
@@ -20,291 +41,265 @@ function updateAuthUI() {
   });
 }
 
-// Get current user from localStorage
+// Get current user from sessionStorage (access token stored after login)
 function getCurrentUser() {
   try {
-    const userData = localStorage.getItem('currentUser');
-    return userData ? JSON.parse(userData) : null;
+    const tokenData = sessionStorage.getItem('shopifyCustomerToken');
+    if (!tokenData) return null;
+    const { accessToken, expiresAt } = JSON.parse(tokenData);
+    if (new Date(expiresAt) < new Date()) {
+      sessionStorage.removeItem('shopifyCustomerToken');
+      return null;
+    }
+    return { accessToken };
   } catch (e) {
-    console.warn('getCurrentUser: localStorage read error', e);
     return null;
   }
 }
 
-// Register new user
-function register(name, email, password) {
+// Register new customer via Shopify
+async function register(name, email, password) {
   try {
-    const users = getUsers();
-    
-    // Check if email already exists
-    if (users.find(u => u.email === email)) {
-      return { success: false, message: 'Email already registered' };
+    const mutation = `
+      mutation customerCreate($input: CustomerCreateInput!) {
+        customerCreate(input: $input) {
+          customer {
+            id
+            firstName
+            lastName
+            email
+            acceptsMarketing
+          }
+          customerUserErrors {
+            field
+            message
+            code
+          }
+        }
+      }
+    `;
+    const [firstName, ...rest] = name.split(' ');
+    const lastName = rest.join(' ');
+    const data = await shopifyFetch(mutation, {
+      input: { firstName, lastName, email, password }
+    });
+
+    const result = data.customerCreate;
+    if (result.customerUserErrors.length > 0) {
+      return { success: false, message: result.customerUserErrors[0].message };
     }
-    
-    // Create new user with Bronze tier
-    const newUser = {
-      id: 'user_' + Date.now(),
-      name,
-      email,
-      password, // In production, this should be hashed
-      tier: 'bronze',
-      points: 100, // Welcome bonus
-      lifetimePoints: 100,
-      orders: [],
-      wishlist: [],
-      pointsHistory: [
-        { type: 'earned', amount: 100, title: 'Welcome Bonus', date: new Date().toISOString().split('T')[0] }
-      ],
-      addresses: [],
-      createdAt: new Date().toISOString()
-    };
-    
-    users.push(newUser);
-    saveUsers(users);
-    localStorage.setItem('currentUser', JSON.stringify(newUser));
-    
-    return { success: true, user: newUser };
+
+    // Auto-login after registration
+    const loginResult = await login(email, password);
+    return loginResult;
   } catch (e) {
     console.warn('register: error', e);
     return { success: false, message: 'Registration failed. Please try again.' };
   }
 }
 
-// Login user
-function login(email, password) {
+// Login via Shopify Storefront
+async function login(email, password) {
   try {
-    const users = getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
-    
-    if (!user) {
-      return { success: false, message: 'Invalid email or password' };
+    const mutation = `
+      mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+        customerAccessTokenCreate(input: $input) {
+          customerAccessToken {
+            accessToken
+            expiresAt
+          }
+          customerUserErrors {
+            field
+            message
+            code
+          }
+        }
+      }
+    `;
+    const data = await shopifyFetch(mutation, {
+      input: { email, password }
+    });
+
+    const result = data.customerAccessTokenCreate;
+    if (result.customerUserErrors.length > 0) {
+      return { success: false, message: result.customerUserErrors[0].message };
     }
-    
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    return { success: true, user };
+
+    const { accessToken, expiresAt } = result.customerAccessToken;
+    sessionStorage.setItem('shopifyCustomerToken', JSON.stringify({ accessToken, expiresAt }));
+
+    // Fetch customer details
+    const customer = await getCustomer(accessToken);
+    return { success: true, user: { ...customer, accessToken } };
   } catch (e) {
     console.warn('login: error', e);
     return { success: false, message: 'Login failed. Please try again.' };
   }
 }
 
-// Logout user
+// Logout
 function logout() {
   try {
-    localStorage.removeItem('currentUser');
-    // Set flag to show login popup after redirect
+    sessionStorage.removeItem('shopifyCustomerToken');
     sessionStorage.setItem('showLoginAfterLogout', '1');
-    // Redirect to index
     window.location.href = 'index.html';
   } catch (e) {
-    console.warn('logout: error', e);
     window.location.href = 'index.html';
   }
 }
 
+// Fetch customer data from Shopify
+async function getCustomer(accessToken) {
+  const query = `
+    query getCustomer($accessToken: String!) {
+      customer(customerAccessToken: $accessToken) {
+        id
+        firstName
+        lastName
+        email
+        phone
+        acceptsMarketing
+        defaultAddress {
+          address1
+          address2
+          city
+          province
+          zip
+          country
+          phone
+        }
+        addresses(first: 5) {
+          edges {
+            node {
+              id
+              address1
+              address2
+              city
+              province
+              zip
+              country
+              phone
+              firstName
+              lastName
+            }
+          }
+        }
+        orders(first: 10, sortKey: CREATED_AT, reverse: true) {
+          edges {
+            node {
+              id
+              name
+              processedAt
+              financialStatus
+              fulfillmentStatus
+              totalPrice { amount currencyCode }
+              lineItems(first: 5) {
+                edges {
+                  node {
+                    title
+                    quantity
+                    originalTotalPrice { amount currencyCode }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query, { accessToken });
+  return data.customer;
+}
+
 // Update user profile
-function updateProfile(data) {
+async function updateProfile(data) {
   try {
     const user = getCurrentUser();
     if (!user) return { success: false, message: 'Not logged in' };
-    
-    // Update allowed fields
-    if (data.name !== undefined) user.name = data.name;
-    if (data.email !== undefined) user.email = data.email;
-    if (data.phone !== undefined) user.phone = data.phone;
-    if (data.birthday !== undefined) user.birthday = data.birthday;
-    
-    // Update in users array
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === user.id);
-    if (userIndex !== -1) {
-      users[userIndex] = user;
-      saveUsers(users);
-      localStorage.setItem('currentUser', JSON.stringify(user));
+
+    const mutation = `
+      mutation customerUpdate($customer: CustomerUpdateInput!) {
+        customerUpdate(customer: $customer) {
+          customer {
+            firstName
+            lastName
+            email
+            phone
+          }
+          customerUserErrors {
+            field
+            message
+            code
+          }
+        }
+      }
+    `;
+    const input = {};
+    if (data.name !== undefined) {
+      const [firstName, ...rest] = data.name.split(' ');
+      input.firstName = firstName;
+      input.lastName = rest.join(' ');
     }
-    
-    return { success: true, user };
+    if (data.email !== undefined) input.email = data.email;
+    if (data.phone !== undefined) input.phone = data.phone;
+
+    const result = await shopifyFetch(mutation, { customer: input });
+    if (result.customerUpdate.customerUserErrors.length > 0) {
+      return { success: false, message: result.customerUpdate.customerUserErrors[0].message };
+    }
+    return { success: true };
   } catch (e) {
-    console.warn('updateProfile: error', e);
     return { success: false, message: 'Failed to update profile' };
   }
 }
 
 // Change password
-function changePassword(currentPassword, newPassword) {
+async function changePassword(currentPassword, newPassword) {
   try {
-    const user = getCurrentUser();
-    if (!user) return { success: false, message: 'Not logged in' };
-    
-    // Verify current password
-    if (user.password !== currentPassword) {
-      return { success: false, message: 'Current password is incorrect' };
+    const mutation = `
+      mutation customerUpdate($customer: CustomerUpdateInput!) {
+        customerUpdate(customer: $customer) {
+          customerUserErrors {
+            field
+            message
+            code
+          }
+        }
+      }
+    `;
+    const result = await shopifyFetch(mutation, {
+      customer: { password: newPassword }
+    });
+    if (result.customerUpdate.customerUserErrors.length > 0) {
+      return { success: false, message: result.customerUpdate.customerUserErrors[0].message };
     }
-    
-    // Validate new password
-    if (!newPassword || newPassword.length < 6) {
-      return { success: false, message: 'New password must be at least 6 characters' };
-    }
-    
-    // Update password
-    user.password = newPassword;
-    
-    // Update in users array
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === user.id);
-    if (userIndex !== -1) {
-      users[userIndex] = user;
-      saveUsers(users);
-      localStorage.setItem('currentUser', JSON.stringify(user));
-    }
-    
     return { success: true, message: 'Password updated successfully' };
   } catch (e) {
-    console.warn('changePassword: error', e);
     return { success: false, message: 'Failed to change password' };
   }
 }
 
-// Get all users
-function getUsers() {
-  try {
-    const usersData = localStorage.getItem('users');
-    return usersData ? JSON.parse(usersData) : [];
-  } catch (e) {
-    console.warn('getUsers: localStorage read error', e);
-    return [];
-  }
-}
-
-// Save all users
-function saveUsers(users) {
-  try {
-    localStorage.setItem('users', JSON.stringify(users));
-  } catch (e) {
-    console.warn('saveUsers: localStorage write error', e);
-  }
-}
-
-// Add points to user
-function addPoints(amount, title) {
-  try {
-    const user = getCurrentUser();
-    if (!user) return;
-    
-    user.points += amount;
-    user.lifetimePoints += amount;
-    user.pointsHistory.unshift({
-      type: 'earned',
-      amount,
-      title,
-      date: new Date().toISOString().split('T')[0]
-    });
-    
-    // Check for tier upgrade
-    updateTier(user);
-    
-    // Update in users array
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === user.id);
-    if (userIndex !== -1) {
-      users[userIndex] = user;
-      saveUsers(users);
-    }
-    
-    localStorage.setItem('currentUser', JSON.stringify(user));
-  } catch (e) {
-    console.warn('addPoints: error', e);
-  }
-}
-
-// Update membership tier based on lifetime points
-function updateTier(user) {
-  const points = user.lifetimePoints;
-  
-  if (points >= 7500) {
-    user.tier = 'platinum';
-  } else if (points >= 3750) {
-    user.tier = 'gold';
-  } else if (points >= 1500) {
-    user.tier = 'silver';
-  } else {
-    user.tier = 'bronze';
-  }
-}
-
-// Get tier display info
-function getTierInfo(tier) {
-  const tiers = {
-    bronze: { name: 'Bronze Member', discount: 0.05, color: '#CD7F32', next: 'silver', needed: 1500 },
-    silver: { name: 'Silver Member', discount: 0.10, color: '#C0C0C0', next: 'gold', needed: 3750 },
-    gold: { name: 'Gold Member', discount: 0.15, color: '#FFD700', next: 'platinum', needed: 7500 },
-    platinum: { name: 'Platinum Member', discount: 0.20, color: '#E5E4E2', next: null, needed: 0 }
-  };
-  return tiers[tier] || tiers.bronze;
-}
-
-// Get discount for current user
-function getUserDiscount() {
-  try {
-    const user = getCurrentUser();
-    if (!user) return 0;
-    return getTierInfo(user.tier).discount;
-  } catch (e) {
-    console.warn('getUserDiscount: error', e);
-    return 0;
-  }
-}
-
-// Add order to user
+// Add order (local tracking since Shopify checkout is external)
 function addOrder(order) {
-  try {
-    const user = getCurrentUser();
-    if (!user) return;
-    
-    user.orders.unshift(order);
-    
-    // Add points for purchase (1 point per $1)
-    const pointsEarned = Math.floor(order.total);
-    addPoints(pointsEarned, `Purchase: Order ${order.id}`);
-    
-    // Update in users array
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === user.id);
-    if (userIndex !== -1) {
-      users[userIndex] = user;
-      saveUsers(users);
-    }
-    
-    localStorage.setItem('currentUser', JSON.stringify(user));
-  } catch (e) {
-    console.warn('addOrder: error', e);
-  }
+  // Orders via Shopify checkout are tracked automatically
+  // This is for local order history if needed
+  console.log('Order placed:', order);
 }
 
-// Add to wishlist
+// Add to wishlist (local storage)
 function addToWishlist(item) {
   try {
     const user = getCurrentUser();
     if (!user) return { success: false, message: 'Please login first' };
-    
-    if (user.wishlist.find(w => w.name === item.name)) {
+    const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+    if (wishlist.find(w => w.name === item.name)) {
       return { success: false, message: 'Item already in wishlist' };
     }
-    
-    user.wishlist.push(item);
-    
-    // Update in users array
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === user.id);
-    if (userIndex !== -1) {
-      users[userIndex] = user;
-      saveUsers(users);
-    }
-    
-    localStorage.setItem('currentUser', JSON.stringify(user));
+    wishlist.push(item);
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
     return { success: true };
   } catch (e) {
-    console.warn('addToWishlist: error', e);
     return { success: false, message: 'Failed to add to wishlist' };
   }
 }
@@ -312,23 +307,27 @@ function addToWishlist(item) {
 // Remove from wishlist
 function removeFromWishlist(itemName) {
   try {
-    const user = getCurrentUser();
-    if (!user) return;
-    
-    user.wishlist = user.wishlist.filter(w => w.name !== itemName);
-    
-    // Update in users array
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === user.id);
-    if (userIndex !== -1) {
-      users[userIndex] = user;
-      saveUsers(users);
-    }
-    
-    localStorage.setItem('currentUser', JSON.stringify(user));
-  } catch (e) {
-    console.warn('removeFromWishlist: error', e);
-  }
+    const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+    const filtered = wishlist.filter(w => w.name !== itemName);
+    localStorage.setItem('wishlist', JSON.stringify(filtered));
+  } catch (e) {}
+}
+
+// Get wishlist
+function getWishlist() {
+  try {
+    return JSON.parse(localStorage.getItem('wishlist') || '[]');
+  } catch (e) { return []; }
+}
+
+// Add points (local tracking)
+function addPoints(amount, title) {
+  // Points are tracked locally; Shopify doesn't have a native points system
+  try {
+    const history = JSON.parse(localStorage.getItem('pointsHistory') || '[]');
+    history.unshift({ type: 'earned', amount, title, date: new Date().toISOString().split('T')[0] });
+    localStorage.setItem('pointsHistory', JSON.stringify(history));
+  } catch (e) {}
 }
 
 // Initialize on page load
@@ -343,7 +342,6 @@ function openAuthModal(showRegister) {
   modal.classList.add('active');
   if (loginForm) loginForm.style.display = showRegister ? 'none' : 'block';
   if (registerForm) registerForm.style.display = showRegister ? 'block' : 'none';
-  // Clear fields
   var fields = modal.querySelectorAll('.auth-fields input');
   for (var i = 0; i < fields.length; i++) { fields[i].value = ''; }
   var errs = modal.querySelectorAll('.auth-error,.auth-success');
@@ -356,7 +354,7 @@ function closeAuthModal() {
   if (modal) modal.classList.remove('active');
 }
 
-// Setup auth modal event listeners (call after DOM is ready)
+// Setup auth modal event listeners
 document.addEventListener('DOMContentLoaded', function() {
   var modal = document.getElementById('auth-modal');
   var overlay = document.getElementById('auth-overlay');
@@ -371,7 +369,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (showRegisterLink) showRegisterLink.addEventListener('click', function(e) { e.preventDefault(); openAuthModal(true); });
   if (showLoginLink) showLoginLink.addEventListener('click', function(e) { e.preventDefault(); openAuthModal(false); });
 
-  // Account nav link click handler
   var accountBtns = document.querySelectorAll('[aria-label="Account"]');
   for (var i = 0; i < accountBtns.length; i++) {
     accountBtns[i].addEventListener('click', function(e) {
@@ -382,9 +379,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Login form submission
   if (loginBtn) {
-    loginBtn.addEventListener('click', function() {
+    loginBtn.addEventListener('click', async function() {
       var emailEl = document.getElementById('login-email');
       var passwordEl = document.getElementById('login-password');
       var errEl = document.getElementById('login-error');
@@ -392,10 +388,10 @@ document.addEventListener('DOMContentLoaded', function() {
       var email = emailEl ? emailEl.value : '';
       var password = passwordEl ? passwordEl.value : '';
       if (errEl) errEl.classList.remove('show');
-      var result = login(email, password);
+      var result = await login(email, password);
       if (result.success) {
         if (sucEl) { sucEl.textContent = 'Login successful!'; sucEl.classList.add('show'); }
-        if (typeof showToast === 'function') showToast('Welcome back, ' + result.user.name + '!');
+        if (typeof showToast === 'function') showToast('Welcome back, ' + (result.user.firstName || result.user.email) + '!');
         setTimeout(function() { location.reload(); }, 800);
       } else {
         if (errEl) { errEl.textContent = result.message; errEl.classList.add('show'); }
@@ -403,9 +399,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Register form submission
   if (registerBtn) {
-    registerBtn.addEventListener('click', function() {
+    registerBtn.addEventListener('click', async function() {
       var nameEl = document.getElementById('register-name');
       var emailEl = document.getElementById('register-email');
       var passwordEl = document.getElementById('register-password');
@@ -428,9 +423,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (errEl) { errEl.textContent = 'Password must be at least 6 characters'; errEl.classList.add('show'); }
         return;
       }
-      var result = register(name, email, password);
+      var result = await register(name, email, password);
       if (result.success) {
-        if (typeof showToast === 'function') showToast('Welcome to Ounin! You got 100 welcome points!');
+        if (typeof showToast === 'function') showToast('Welcome to Ounin!');
         setTimeout(function() { location.reload(); }, 800);
       } else {
         if (errEl) { errEl.textContent = result.message; errEl.classList.add('show'); }
