@@ -271,8 +271,10 @@
   }
 
   function switchMainImage(src) {
-    document.getElementById('main-product-img').src = src;
+    var img = document.getElementById('main-product-img');
+    if (img) { img.src = src; }
   }
+  window.switchMainImage = switchMainImage;
 
   function addToCart(productId, name, price) {
     var existingItem = null;
