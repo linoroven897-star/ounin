@@ -270,9 +270,16 @@
     } catch (e) {}
   }
 
-  function switchMainImage(src) {
-    var img = document.getElementById('main-product-img');
-    if (img) { img.src = src; }
+  function switchMainImage(thumb) {
+    var mainImg = document.getElementById('main-product-img');
+    var thumbs = document.querySelectorAll('[id="main-product-img"] ~ div img, .product-gallery-thumbs img');
+    if (mainImg) { mainImg.src = thumb.dataset.src || thumb.src; }
+    // Reset all thumb borders
+    document.querySelectorAll('[onclick="switchMainImage(this)"]').forEach(function(el) {
+      el.style.borderColor = 'transparent';
+    });
+    // Highlight clicked thumb
+    thumb.style.borderColor = 'var(--color-primary)';
   }
   window.switchMainImage = switchMainImage;
 
