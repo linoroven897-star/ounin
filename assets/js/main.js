@@ -53,50 +53,39 @@
   const products = {
     'pro-embedded': {
       id: 'pro-embedded',
-      name: 'Ounin Pro Embedded',
-      price: 1299,
-      originalPrice: 1499,
+      name: 'Steam Combi Oven (18in)',
+      price: 250,
+      originalPrice: 399,
       image: 'assets/images/product-1a.jpg',
       imageHover: 'assets/images/product-1b.jpg',
-      desc: '75L Capacity • 12 Cooking Modes • WiFi Connected. Our flagship embedded steam oven with precision temperature control and smart home integration.',
-      features: ['75L capacity', '12 cooking modes', 'WiFi connected', 'Steam injection system', 'Touchscreen display', 'Child lock']
+      desc: '10-in-1 Multi-function - 18qt Family Size - Self-cleaning'
     },
     'compact': {
       id: 'compact',
-      name: 'Ounin Compact',
-      price: 699,
+      name: 'Steam Air Fry Oven (12L)',
+      price: 250,
+      originalPrice: 429,
       image: 'assets/images/product-2a.jpg',
       imageHover: 'assets/images/product-2b.jpg',
-      desc: '40L Capacity • 8 Cooking Modes • Countertop Design. Perfect for smaller kitchens without compromising on performance.',
-      features: ['40L capacity', '8 cooking modes', 'Countertop design', 'Compact footprint', 'Easy installation', 'Digital display']
+      desc: 'Steam & Crisp - 12L Capacity - 8-in-1'
     },
     'mini': {
       id: 'mini',
-      name: 'Ounin Mini',
-      price: 399,
+      name: 'Steam Combi Oven (24in)',
+      price: 309,
+      originalPrice: 699,
       image: 'assets/images/product-3a.jpg',
       imageHover: 'assets/images/product-3b.jpg',
-      desc: '25L Capacity • 5 Cooking Modes • Portable. Entry-level steam oven perfect for beginners and small households.',
-      features: ['25L capacity', '5 cooking modes', 'Lightweight design', 'Budget-friendly', 'Simple controls', 'Quick heat-up']
+      desc: 'XL Family Size - 25.4QT - 11-in-1'
     },
     'elite-bundle': {
       id: 'elite-bundle',
-      name: 'Ounin Elite Bundle',
-      price: 1599,
-      originalPrice: 1999,
+      name: 'Air Fryer Oven (12in)',
+      price: 150,
+      originalPrice: 299,
       image: 'assets/images/product-4a.jpg',
       imageHover: 'assets/images/product-4b.jpg',
-      desc: 'Pro Oven + Premium Accessories Kit + Chef Cookbook. Our complete package for the serious home chef.',
-      features: ['Pro embedded oven', 'Steam tray', 'Wire rack', 'Cleaning kit', 'Exclusive cookbook', 'Recipe cards']
-    },
-    'accessory-kit': {
-      id: 'accessory-kit',
-      name: 'Premium Accessory Kit',
-      price: 149,
-      image: 'assets/images/product-5a.jpg',
-      imageHover: 'assets/images/product-5b.jpg',
-      desc: 'Steam Tray • Wire Rack • Cookbook • Cleaning Kit. Everything you need to get the most from your Ounin oven.',
-      features: ['Steam tray', 'Wire rack', 'Ceramic dish', 'Cleaning kit', 'Recipe cookbook', 'Storage bag']
+      desc: 'Steam Infusion - Compact - 6-in-1'
     }
   };
 
@@ -252,11 +241,27 @@
   // ========================================
   // CART MANAGEMENT
   // ========================================
+  function clearCart() {
+    cart = [];
+    saveCart();
+    updateCartUI();
+  }
+
   function loadCart() {
     try {
       var savedCart = localStorage.getItem('ounin-cart');
       if (savedCart) {
-        cart = JSON.parse(savedCart);
+        var parsed = JSON.parse(savedCart);
+        if (Array.isArray(parsed)) {
+          cart = [];
+          for (var i = 0; i < parsed.length; i++) {
+            if (parsed[i] && parsed[i].id && parsed[i].name && parsed[i].price && parsed[i].qty > 0) {
+              cart.push(parsed[i]);
+            }
+          }
+        }
+      } else {
+        cart = [];
       }
     } catch (e) {
       cart = [];
@@ -284,6 +289,8 @@
   window.switchMainImage = switchMainImage;
 
   function addToCart(productId, name, price) {
+    if (!productId || !name || !price) return;
+    
     var existingItem = null;
     for (var i = 0; i < cart.length; i++) {
       if (cart[i].id === productId) { existingItem = cart[i]; break; }
@@ -292,12 +299,14 @@
     if (existingItem) {
       existingItem.qty += 1;
     } else {
+      var productInfo = products[productId];
+      var image = productInfo ? productInfo.image : 'assets/images/product-placeholder.jpg';
       cart.push({
         id: productId,
         name: name,
         price: price,
         qty: 1,
-        image: products[productId] ? products[productId].image : 'assets/images/product-placeholder.jpg'
+        image: image
       });
     }
     
@@ -307,6 +316,7 @@
   }
 
   function removeFromCart(productId) {
+    if (!productId) return;
     var newCart = [];
     for (var i = 0; i < cart.length; i++) {
       if (cart[i].id !== productId) newCart.push(cart[i]);
@@ -317,6 +327,7 @@
   }
 
   function updateQuantity(productId, delta) {
+    if (!productId) return;
     var item = null;
     for (var i = 0; i < cart.length; i++) {
       if (cart[i].id === productId) { item = cart[i]; break; }
@@ -348,15 +359,28 @@
     return sum;
   }
 
+  function updateCartCount(count) {
+    if (cartCount) {
+      cartCount.textContent = count;
+      cartCount.style.display = count > 0 ? 'flex' : 'none';
+    }
+  }
+
   function updateCartUI() {
     var itemCount = getCartItemCount();
     var total = getCartTotal();
     
-    // Update cart count badge
-    if (cartCount) {
-      cartCount.textContent = itemCount;
-      cartCount.style.display = itemCount > 0 ? 'flex' : 'none';
+    // Validate cart - remove invalid items
+    for (var i = cart.length - 1; i >= 0; i--) {
+      if (!cart[i].id || !cart[i].name || !cart[i].price || cart[i].qty < 1) {
+        cart.splice(i, 1);
+      }
     }
+    saveCart();
+    itemCount = getCartItemCount();
+    
+    // Update cart count badge
+    updateCartCount(itemCount);
     
     // Update cart drawer
     if (cartItemCount) {
@@ -413,6 +437,8 @@
   window.updateQuantity = updateQuantity;
   window.removeFromCart = removeFromCart;
   window.updateCartCount = updateCartUI;
+  window.loadCart = loadCart;
+  window.clearCart = clearCart;
 
   if (cartBtn) {
     cartBtn.addEventListener('click', openCart);
