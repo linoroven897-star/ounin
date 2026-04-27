@@ -347,6 +347,26 @@
     </div>
   </footer>
 
+  <!-- CART DRAWER -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3 class="cart-drawer-title">Your Cart (<span id="cart-item-count">0</span>)</h3>
+      <button class="cart-close" id="cart-close" aria-label="Close cart">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer-items" id="cart-drawer-items"></div>
+    <div class="cart-drawer-footer">
+      <div class="cart-total">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">$0.00</span>
+      </div>
+      <a href="checkout.html" class="btn btn-primary cart-checkout-btn">Checkout</a>
+      <p class="cart-continue" id="continue-shopping">Continue Shopping</p>
+    </div>
+  </div>
+  <div class="cart-overlay" id="cart-overlay"></div>
+
   <script src="assets/js/main.js"></script>
 </body>
 </html>
