@@ -102,11 +102,11 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;max-width:1200px;margin:0 auto;">
         <div style="display:flex;flex-direction:column;gap:16px;">
           <div style="width:100%;aspect-ratio:1;overflow:hidden;border-radius:16px;background:#e8dfd1;display:flex;align-items:center;justify-content:center;">
-            <img src="assets/images/product-1a.jpg" alt="Steam Combi Oven" style="width:100%;height:100%;object-fit:cover;">
+            <img src="assets/images/product-1a.jpg" alt="Steam Combi Oven" style="width:100%;height:100%;object-fit:cover;" id="main-product-img">
           </div>
           <div style="display:flex;gap:12px;">
-            <img src="assets/images/product-1a.jpg" alt="Main view" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid var(--color-primary);" onclick="document.querySelector('.product-main-img').src=this.src">
-            <img src="assets/images/product-1b.jpg" alt="Detail view" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;" onclick="document.querySelector('.product-main-img').src=this.src">
+            <img src="assets/images/product-1a.jpg" alt="Main view" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid var(--color-primary);" onclick="switchMainImage(this.src)">
+            <img src="assets/images/product-1b.jpg" alt="Detail view" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;" onclick="switchMainImage(this.src)">
           </div>
         </div>
         <div>
@@ -146,8 +146,8 @@
               <span style="font-size:15px;color:var(--color-text);">304 Stainless Steel Interior</span>
             </div>
           </div>
-          <button class="btn btn-primary" style="width:100%;margin-bottom:12px;padding:16px;font-size:16px;" onclick="window.location.href='https://ounin.myshopify.com/cart/15098386055532'">Buy Now - $250</button>
-          <button class="btn btn-outline" style="width:100%;padding:14px;font-size:15px;" onclick="addToCart('pro-embedded','Steam Combi Oven (18in)',250)">Add to Cart</button>
+          <button class="btn btn-primary" style="width:100%;margin-bottom:12px;padding:16px;font-size:16px;background:#8B7355;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(139,115,85,0.3);" onclick="window.location.href='https://ounin.myshopify.com/cart/15098386055532'">Buy Now - $250</button>
+          <button class="btn btn-add-cart" style="width:100%;padding:16px;font-size:16px;background:#D4A574;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(212,165,116,0.3);" onclick="addToCart('pro-embedded','Steam Combi Oven (18in)',250)">Add to Cart</button>
           <div style="margin-top:24px;display:flex;gap:20px;flex-wrap:wrap;">
             <span style="font-size:13px;color:var(--color-text-light);">Secure Checkout</span>
             <span style="font-size:13px;color:var(--color-text-light);">Free Shipping</span>

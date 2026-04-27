@@ -270,6 +270,10 @@
     } catch (e) {}
   }
 
+  function switchMainImage(src) {
+    document.getElementById('main-product-img').src = src;
+  }
+
   function addToCart(productId, name, price) {
     var existingItem = null;
     for (var i = 0; i < cart.length; i++) {
