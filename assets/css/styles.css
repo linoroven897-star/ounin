@@ -864,7 +864,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
-  padding: 60px 80px;
+  padding: 200px 80px;
   box-sizing: border-box;
 }
 
@@ -873,14 +873,16 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: #fff;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6);
   margin-bottom: 32px;
 }
 
 .banner-divider-title {
   font-size: 60px;
   font-weight: 700;
-  color: white;
+  color: #fff;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6);
   line-height: 1.2;
   margin-bottom: 48px;
 }
