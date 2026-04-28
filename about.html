@@ -133,7 +133,34 @@
         <p class="copyright">© 2026 Ounin. All rights reserved.</p>
       </div>
     </div>
-  </footer>
+    </footer>
+  <!-- CART DRAWER -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3 class="cart-drawer-title">Your Cart (<span id="cart-item-count">0</span>)</h3>
+      <button class="cart-drawer-close" id="cart-close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer-content" id="cart-content">
+      <div class="cart-empty" id="cart-empty">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <p>Your cart is empty</p>
+        <a href="products.html" class="btn btn-primary">Start Shopping</a>
+      </div>
+      <div class="cart-items" id="cart-items"></div>
+    </div>
+    <div class="cart-drawer-footer" id="cart-footer">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">  </footer></span>
+      </div>
+      <p class="cart-shipping-note">Shipping & taxes calculated at checkout</p>
+      <button class="btn btn-primary btn-checkout" id="checkout-btn">Checkout</button>
+      <a href="products.html" class="cart-continue">Continue Shopping</a>
+    </div>
+  </div>
+  <div class="cart-overlay" id="cart-overlay"></div>
 
   <script src="assets/js/main.js"></script>
   <script src="assets/js/auth.js"></script>
