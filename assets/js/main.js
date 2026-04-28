@@ -437,6 +437,9 @@
   }
 
   // Expose functions globally for onclick handlers
+  window.addToCart = addToCart;
+  window.openCart = openCart;
+  window.closeCart = closeCart;
   window.updateQuantity = updateQuantity;
   window.removeFromCart = removeFromCart;
   window.updateCartCount = updateCartUI;
