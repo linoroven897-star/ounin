@@ -1628,7 +1628,8 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 20px;
 }
 
-.cart-drawer-close {
+.cart-drawer-close,
+.cart-close {
   width: 40px;
   height: 40px;
   display: flex;
@@ -1636,15 +1637,39 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   border-radius: 50%;
   transition: background-color var(--transition-fast);
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
-.cart-drawer-close:hover {
+.cart-drawer-close:hover,
+.cart-close:hover {
   background-color: var(--color-background);
 }
 
-.cart-drawer-close svg {
+.cart-drawer-close svg,
+.cart-close svg {
   width: 20px;
   height: 20px;
+}
+
+/* Cart Overlay - semi-transparent backdrop */
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.cart-overlay.active {
+  opacity: 1;
+  visibility: visible;
 }
 
 .cart-drawer-content {

@@ -27,6 +27,7 @@
   const cartBtn = document.getElementById('cart-btn');
   const cartDrawer = document.getElementById('cart-drawer');
   const cartClose = document.getElementById('cart-close');
+  const cartOverlay = document.getElementById('cart-overlay');
   const cartContent = document.getElementById('cart-content');
   const cartItems = document.getElementById('cart-items');
   const cartEmpty = document.getElementById('cart-empty');
@@ -425,11 +426,13 @@
 
   function openCart() {
     if (cartDrawer) cartDrawer.classList.add('active');
+    if (cartOverlay) cartOverlay.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
 
   function closeCart() {
     if (cartDrawer) cartDrawer.classList.remove('active');
+    if (cartOverlay) cartOverlay.classList.remove('active');
     document.body.style.overflow = '';
   }
 
@@ -449,12 +452,8 @@
   }
 
   // Close cart drawer on overlay click
-  if (cartDrawer) {
-    cartDrawer.addEventListener('click', function(e) {
-      if (e.target === cartDrawer) {
-        closeCart();
-      }
-    });
+  if (cartOverlay) {
+    cartOverlay.addEventListener('click', closeCart);
   }
 
   // Add to cart buttons
