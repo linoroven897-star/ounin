@@ -26,6 +26,8 @@
   <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
   <link rel="preload" as="image" href="assets/images/hero-banner-poster.png" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/critical.css">
+  <!-- Prevent popup flash: hide before async styles.css loads -->
+  <style>.reg-popup,#reg-popup{visibility:hidden!important;opacity:0!important}.reg-popup.active{visibility:visible!important;opacity:1!important}</style>
   <!-- Google Fonts: async load to avoid blocking render -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
