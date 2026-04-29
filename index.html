@@ -25,18 +25,14 @@
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
   
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/critical.css">
+  <!-- Google Fonts: async load to avoid blocking render -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
-  <!-- Preload critical above-the-fold assets -->
-  <link rel="preload" as="image" href="assets/images/hero-banner-poster.png" fetchpriority="high">
-  <link rel="preload" as="image" href="assets/images/product-1a.jpg" fetchpriority="high">
-  <link rel="preload" as="image" href="assets/images/product-2a.jpg" fetchpriority="high">
-  <link rel="preload" as="image" href="assets/images/product-3a.jpg" fetchpriority="high">
-  <link rel="preload" as="image" href="assets/images/product-4a.jpg" fetchpriority="high">
-  <link rel="preload" as="image" href="assets/images/story-1.jpg" fetchpriority="high">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"></noscript>
+  <link rel="stylesheet" href="assets/css/styles.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/styles.css"></noscript>
 </head>
 <body>
   <!-- JSON-LD Structured Data -->
@@ -187,7 +183,7 @@
 
   <!-- BANNER DIVIDER -->
   <section class="banner-divider">
-    <img src="assets/images/banner-divider.jpg" alt="Banner" class="banner-divider-img">
+    <img loading="lazy" src="assets/images/banner-divider.jpg" alt="Banner" class="banner-divider-img">
     <div class="banner-divider-overlay">
       <p class="banner-divider-tag">SPRING WELLNESS SALE</p>
       <h2 class="banner-divider-title">Eat Clean.<br>Live Light.</h2>
@@ -218,7 +214,7 @@
           <div class="product-card">
             <div class="product-badge">Bestseller</div>
             <div class="product-img-wrap"><a href="product-pro-embedded.html"><img src="assets/images/product-1a.jpg" alt="Ounin Pro Steam Oven" class="product-img"></a>
-              <img src="assets/images/product-1b.jpg" alt="Ounin Pro Steam Oven Detail" class="product-img-hover">
+              <img loading="lazy" src="assets/images/product-1b.jpg" alt="Ounin Pro Steam Oven Detail" class="product-img-hover">
               <div class="product-actions">
                 <button class="product-action-btn quick-view-btn" data-product="pro-embedded">
                   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -235,14 +231,14 @@
                 <span class="price-current">$250</span>
                 <span class="price-original">$399</span>
               </div>
-              <div class="product-buttons"><a href="product-pro-embedded.html" class="btn btn-primary">Buy Now</a><button class="btn btn-add-cart" data-product="pro-embedded" data-price="250" data-name="Steam Combi Oven (18寸)">Add to Cart</button></div>
+              <div class="product-buttons"><a href="product-pro-embedded.html" class="btn btn-primary">Buy Now</a><button class="btn btn-add-cart" data-product="pro-embedded" data-price="250" data-name="Steam Combi Oven (18�?">Add to Cart</button></div>
             </div>
           </div>
           <!-- Product 2 -->
           <div class="product-card">
             <div class="product-badge">New</div>
             <div class="product-img-wrap"><a href="product-compact.html"><img src="assets/images/product-2a.jpg" alt="Steam Air Fry Oven" class="product-img"></a>
-              <img src="assets/images/product-2b.jpg" alt="Steam Air Fry Oven Detail" class="product-img-hover">
+              <img loading="lazy" src="assets/images/product-2b.jpg" alt="Steam Air Fry Oven Detail" class="product-img-hover">
               <div class="product-actions">
                 <button class="product-action-btn quick-view-btn" data-product="compact">
                   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -266,7 +262,7 @@
           <div class="product-card">
             <div class="product-badge">Popular</div>
             <div class="product-img-wrap"><a href="product-mini.html"><img src="assets/images/product-3a.jpg" alt="OUNIN 24in Steam Combi Oven" class="product-img"></a>
-              <img src="assets/images/product-3b.jpg" alt="OUNIN 24in Steam Combi Oven Detail" class="product-img-hover">
+              <img loading="lazy" src="assets/images/product-3b.jpg" alt="OUNIN 24in Steam Combi Oven Detail" class="product-img-hover">
               <div class="product-actions">
                 <button class="product-action-btn quick-view-btn" data-product="mini">
                   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -290,7 +286,7 @@
           <div class="product-card">
             <div class="product-badge">-20%</div>
             <div class="product-img-wrap"><a href="product-elite-bundle.html"><img src="assets/images/product-4a.jpg" alt="OUNIN 12in Air Fryer Oven" class="product-img"></a>
-              <img src="assets/images/product-4b.jpg" alt="OUNIN 12in Air Fryer Oven Detail" class="product-img-hover">
+              <img loading="lazy" src="assets/images/product-4b.jpg" alt="OUNIN 12in Air Fryer Oven Detail" class="product-img-hover">
               <div class="product-actions">
                 <button class="product-action-btn quick-view-btn" data-product="elite-bundle">
                   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -325,10 +321,10 @@
       <div class="feature-media">
         <div class="prec-carousel" id="precisionCarousel">
           <div class="prec-track">
-            <img src="assets/images/grid-1.jpg" alt="Feature 1" class="prec-slide active">
-            <img src="assets/images/grid-2.jpg" alt="Feature 2" class="prec-slide">
-            <img src="assets/images/grid-3.jpg" alt="Feature 3" class="prec-slide">
-            <img src="assets/images/grid-4.jpg" alt="Feature 4" class="prec-slide">
+            <img loading="lazy" src="assets/images/grid-1.jpg" alt="Feature 1" class="prec-slide active">
+            <img loading="lazy" src="assets/images/grid-2.jpg" alt="Feature 2" class="prec-slide">
+            <img loading="lazy" src="assets/images/grid-3.jpg" alt="Feature 3" class="prec-slide">
+            <img loading="lazy" src="assets/images/grid-4.jpg" alt="Feature 4" class="prec-slide">
           </div>
           <button class="prec-prev" aria-label="Previous">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -377,15 +373,15 @@
       </div>
       <div class="features-highlight-grid">
         <div class="feature-item">
-          <img src="assets/images/feature-1.gif" alt="Dual Cook" class="feature-gif">
+          <img loading="lazy" src="assets/images/feature-1.gif" alt="Dual Cook" class="feature-gif">
           <p class="feature-caption">Dual Cook<br>Bake above and steam below simultaneously to serve a complete, flavor-packed dinner in just 20 minutes.</p>
         </div>
         <div class="feature-item">
-          <img src="assets/images/feature-2.gif" alt="Sous Vide" class="feature-gif">
+          <img loading="lazy" src="assets/images/feature-2.gif" alt="Sous Vide" class="feature-gif">
           <p class="feature-caption">Sous Vide<br>Lock in moisture and flavor to effortlessly achieve tender, juicy, Michelin-star quality meals at home.</p>
         </div>
         <div class="feature-item">
-          <img src="assets/images/feature-3.gif" alt="Rotisserie" class="feature-gif">
+          <img loading="lazy" src="assets/images/feature-3.gif" alt="Rotisserie" class="feature-gif">
           <p class="feature-caption">Rotisserie Roasting<br>Enjoy perfectly even heating that delivers a golden, crispy, and mouth-watering roast chicken every single time.</p>
         </div>
       </div>
@@ -397,7 +393,7 @@
     <div class="container">
       <div class="story-grid">
         <div class="story-images">
-          <img src="assets/images/story-1.jpg" alt="Ounin kitchen lifestyle" class="story-single-img">
+          <img src="assets/images/story-1.jpg" alt="Ounin kitchen lifestyle" class="story-single-img" loading="lazy">
         </div>
         <div class="story-content">
           <span class="story-tag">Our Story</span>
@@ -486,7 +482,7 @@
       <div class="recipes-grid">
         <a href="recipe-detail.html" class="recipe-card recipe-card-featured">
           <div class="recipe-img-wrap">
-            <img src="assets/images/recipe-1.jpg" alt="Garlic Prawns" class="recipe-img">
+            <img loading="lazy" src="assets/images/recipe-1.jpg" alt="Garlic Prawns" class="recipe-img">
             <span class="recipe-time">15 min</span>
           </div>
           <div class="recipe-info">
@@ -497,7 +493,7 @@
         </a>
         <a href="recipe-detail.html" class="recipe-card">
           <div class="recipe-img-wrap">
-            <img src="assets/images/recipe-2.jpg" alt="Sourdough Bread" class="recipe-img">
+            <img loading="lazy" src="assets/images/recipe-2.jpg" alt="Sourdough Bread" class="recipe-img">
             <span class="recipe-time">45 min</span>
           </div>
           <div class="recipe-info">
@@ -508,7 +504,7 @@
         </a>
         <a href="recipe-detail.html" class="recipe-card">
           <div class="recipe-img-wrap">
-            <img src="assets/images/recipe-3.jpg" alt="Roast Chicken" class="recipe-img">
+            <img loading="lazy" src="assets/images/recipe-3.jpg" alt="Roast Chicken" class="recipe-img">
             <span class="recipe-time">1 hr</span>
           </div>
           <div class="recipe-info">
@@ -519,7 +515,7 @@
         </a>
         <a href="recipe-detail.html" class="recipe-card">
           <div class="recipe-img-wrap">
-            <img src="assets/images/recipe-4.jpg" alt="Vegetables" class="recipe-img">
+            <img loading="lazy" src="assets/images/recipe-4.jpg" alt="Vegetables" class="recipe-img">
             <span class="recipe-time">20 min</span>
           </div>
           <div class="recipe-info">
@@ -530,7 +526,7 @@
         </a>
         <a href="recipe-detail.html" class="recipe-card">
           <div class="recipe-img-wrap">
-            <img src="assets/images/recipe-5.jpg" alt="Steam Salmon" class="recipe-img">
+            <img loading="lazy" src="assets/images/recipe-5.jpg" alt="Steam Salmon" class="recipe-img">
             <span class="recipe-time">20 min</span>
           </div>
           <div class="recipe-info">
@@ -541,7 +537,7 @@
         </a>
         <a href="recipe-detail.html" class="recipe-card">
           <div class="recipe-img-wrap">
-            <img src="assets/images/recipe-6.jpg" alt="New York Cheesecake" class="recipe-img">
+            <img loading="lazy" src="assets/images/recipe-6.jpg" alt="New York Cheesecake" class="recipe-img">
             <span class="recipe-time">1 hr</span>
           </div>
           <div class="recipe-info">
@@ -572,7 +568,7 @@
           </div>
           <p class="testimonial-text">"The best purchase I've made for my kitchen. The steam function makes bread baking so much easier, and the results are incredible."</p>
           <div class="testimonial-author">
-            <img src="assets/images/testi-1.jpg" alt="Sarah M." class="testimonial-avatar">
+            <img loading="lazy" src="assets/images/testi-1.jpg" alt="Sarah M." class="testimonial-avatar">
             <div>
               <p class="testimonial-name">Sarah M.</p>
               <p class="testimonial-location">Portland, OR</p>
@@ -589,7 +585,7 @@
           </div>
           <p class="testimonial-text">"Finally, an oven that lives up to the hype. The steam roast chicken is unreal. So moist and flavorful. Worth every penny."</p>
           <div class="testimonial-author">
-            <img src="assets/images/testi-2.jpg" alt="James K." class="testimonial-avatar">
+            <img loading="lazy" src="assets/images/testi-2.jpg" alt="James K." class="testimonial-avatar">
             <div>
               <p class="testimonial-name">James K.</p>
               <p class="testimonial-location">Austin, TX</p>
@@ -606,7 +602,7 @@
           </div>
           <p class="testimonial-text">"Installed it in my new kitchen and it looks stunning. The design fits perfectly with my modern kitchen aesthetic."</p>
           <div class="testimonial-author">
-            <img src="assets/images/testi-3.jpg" alt="Emma L." class="testimonial-avatar">
+            <img loading="lazy" src="assets/images/testi-3.jpg" alt="Emma L." class="testimonial-avatar">
             <div>
               <p class="testimonial-name">Emma L.</p>
               <p class="testimonial-location">5-6 Tong'an Road, Jun'an Town, Shunde District, Foshan City, Guangdong Province</p>
@@ -1184,5 +1180,6 @@
   </script>
 </body>
 </html>
+
 
 
