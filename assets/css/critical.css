@@ -715,3 +715,7 @@ h1, h2, h3, h4, h5, h6 {
 .product-card:hover .product-img {
   opacity: 0;
 }
+
+/* Prevent popup flash */
+.reg-popup,#reg-popup{visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+.reg-popup.active{visibility:visible!important;opacity:1!important;pointer-events:auto!important}
