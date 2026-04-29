@@ -24,7 +24,7 @@
   
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-  
+  <link rel="preload" as="image" href="assets/images/hero-banner-poster.png" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/critical.css">
   <!-- Google Fonts: async load to avoid blocking render -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -162,7 +162,9 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-video-bg">
-      <div class="hero-poster" id="hero-poster"></div>
+      <div class="hero-poster" id="hero-poster">
+        <img src="assets/images/hero-banner-poster.png" alt="" fetchpriority="high" loading="eager">
+      </div>
       <video muted loop playsinline webkit-playsinline preload="none" class="hero-video-desktop" id="hero-video">
         <source src="assets/videos/hero-video.mp4" type="video/mp4">
       </video>
