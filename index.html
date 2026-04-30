@@ -867,7 +867,7 @@
     
     <div class="floating-popup-content">
       <!-- Cookie Consent Panel -->
-      <div class="floating-popup-panel active" id="panel-cookie">
+      <div class="floating-popup-panel" id="panel-cookie">
         <div class="cookie-icon">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
@@ -1098,10 +1098,13 @@
       // Don't show popup if user just logged in/registered (they're on their way to account page)
       if (justLoggedIn) return;
 
-      // Show popup after 5 seconds for every non-logged-in visitor
-      setTimeout(() => {
-        openRegPopup();
-      }, 5000);
+      // Show popup after 5 seconds for every non-logged-in visitor (only once per session)
+      if (!sessionStorage.getItem('regPopupShown')) {
+        sessionStorage.setItem('regPopupShown', 'true');
+        setTimeout(() => {
+          openRegPopup();
+        }, 5000);
+      }
     });
 
     // Close on Escape key
