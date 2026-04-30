@@ -716,12 +716,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Product card 3: show full image with letterboxing */
-.product-grid .product-card:nth-child(3) .product-img-wrap {
+#product-track .product-card:nth-child(3) .product-img-wrap {
   background: #f5f5f5;
 }
 
-.product-grid .product-card:nth-child(3) .product-img,
-.product-grid .product-card:nth-child(3) .product-img-hover {
+#product-track .product-card:nth-child(3) .product-img,
+#product-track .product-card:nth-child(3) .product-img-hover {
   object-fit: contain;
 }
 
