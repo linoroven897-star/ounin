@@ -174,9 +174,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar-brand {
-  font-family: 'KaiTi', 'STKaiti', 'SimKai', var(--font-sans);
+  font-family: var(--font-serif);
   font-size: 28px;
-  font-weight: bold;
+  font-weight: 600;
   letter-spacing: 4px;
   color: var(--color-primary);
 }
